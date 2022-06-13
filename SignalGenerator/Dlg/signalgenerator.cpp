@@ -21,7 +21,7 @@ SignalGenerator::SignalGenerator(QWidget *parent)
         m_ampsetting_dialog->setModal(true);
     }
 
-    m_timer_gendata.setInterval(100);
+    m_timer_gendata.setInterval(1000 / ui->m_lineedit_srate->text().toInt());
     m_timer_gendata.setTimerType(Qt::PreciseTimer);
     connect(&m_timer_gendata, &QTimer::timeout, this, &SignalGenerator::on_m_timer_gendata_timeout);
     connect(m_serversetting_dialog, &ServerSetting::ServerStateChanged, this, [ = ]()
