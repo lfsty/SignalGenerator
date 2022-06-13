@@ -6,6 +6,7 @@
 #include "ampsetting.h"
 #include "channelwidget.h"
 #include <QTimer>
+#include <QFile>
 QT_BEGIN_NAMESPACE
 namespace Ui
 {

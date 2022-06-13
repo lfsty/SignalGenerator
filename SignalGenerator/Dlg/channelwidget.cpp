@@ -8,6 +8,7 @@ ChannelWidget::ChannelWidget(QWidget *parent) :
     ui->setupUi(this);
     m_channelsetting_dialog = new ChannelSetting(this);
     m_channelsetting_dialog->setModal(true);
+    setAttribute(Qt::WA_StyledBackground);
 }
 
 ChannelWidget::ChannelWidget(QWidget *parent, ChannelWidget *from_cpoy_widget):
@@ -18,6 +19,7 @@ ChannelWidget::ChannelWidget(QWidget *parent, ChannelWidget *from_cpoy_widget):
     m_channelsetting_dialog = new ChannelSetting(this, from_cpoy_widget->m_channelsetting_dialog);
     m_channelsetting_dialog->setModal(true);
     SetChannelName(from_cpoy_widget->ui->m_label_name->text());
+    setAttribute(Qt::WA_StyledBackground);
 }
 
 ChannelWidget::~ChannelWidget()

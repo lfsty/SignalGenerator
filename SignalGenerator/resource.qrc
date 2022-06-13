@@ -4,5 +4,6 @@
         <file>image/copy.png</file>
         <file>image/gear.png</file>
         <file>image/add.png</file>
+        <file>style/default.qss</file>
     </qresource>
 </RCC>

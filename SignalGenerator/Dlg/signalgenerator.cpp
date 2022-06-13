@@ -45,6 +45,15 @@ SignalGenerator::SignalGenerator(QWidget *parent)
         m_send_frame_s = 0;
     });
     m_timer_update_serverdata_s.start();
+
+    //添加样式文件
+    QFile qssFile(":/style/default.qss");
+    qssFile.open(QFile::ReadOnly);
+    if(qssFile.isOpen())
+    {
+        this->setStyleSheet(QLatin1String(qssFile.readAll()));
+        qssFile.close();
+    }
 }
 
 SignalGenerator::~SignalGenerator()
