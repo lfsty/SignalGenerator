@@ -50,22 +50,11 @@ ServerSetting::ServerSetting(QWidget *parent) :
 //    ui->m_combobox_databits->setEditable(true);
 //    ui->m_combobox_stopbits->setEditable(true);
 
-    //可用串口号检测
-    const auto availablePorts_infos = QSerialPortInfo::availablePorts();
-    for(const auto &availablePorts_info : availablePorts_infos)
-    {
-        ui->m_combobox_com_name->addItem(availablePorts_info.portName());
-    }
 
-    if(ui->m_combobox_com_name->count() == 0)
-    {
-        ui->m_pushbutton_com_on->setDisabled(true);
-        ui->m_label_com_warning->setText("当前无可用串口");
-    }
-    else
-    {
-        ui->m_label_com_warning->hide();
-    }
+    //默认串口协议
+    m_com_protocol.push_back(0xAA);
+    m_com_protocol.push_back(0xAA);
+    m_com_protocol.push_back(0xAA);
 
 }
 
@@ -262,28 +251,55 @@ void ServerSetting::OpenSerialPort()
     }
 }
 
-void ServerSetting::TcpSend(QByteArray senddata)
+bool ServerSetting::TcpSend(QByteArray senddata)
 {
+    bool result = false;
     for(QTcpSocket *socket : m_tcp_client_socket_list)
     {
         if(socket != nullptr)
         {
             socket->write(senddata);
+            result = true;
         }
     }
+    return result;
 }
 
-void ServerSetting::SerialPortSend(QByteArray senddata)
+bool ServerSetting::SerialPortSend(QByteArray senddata)
 {
     if(m_serialPort.isOpen())
     {
-        m_serialPort.write(senddata);
+        m_serialPort.write(m_com_protocol + senddata);
+        return true;
     }
+    return false;
 }
 
 bool ServerSetting::IsServerOn()
 {
-    return m_tcp_client_socket_list.size() > 0 || m_serialPort.isOpen();
+    return m_tcpserver.isListening() || m_serialPort.isOpen();
+}
+
+void ServerSetting::showEvent(QShowEvent *event)
+{
+    //可用串口号检测
+    ui->m_combobox_com_name->clear();
+    const auto availablePorts_infos = QSerialPortInfo::availablePorts();
+    for(const auto &availablePorts_info : availablePorts_infos)
+    {
+        ui->m_combobox_com_name->addItem(availablePorts_info.portName());
+    }
+
+    if(ui->m_combobox_com_name->count() == 0)
+    {
+        ui->m_pushbutton_com_on->setDisabled(true);
+        ui->m_label_com_warning->setText("当前无可用串口");
+    }
+    else
+    {
+        ui->m_pushbutton_com_on->setDisabled(false);
+        ui->m_label_com_warning->hide();
+    }
 }
 
 void ServerSetting::on_m_pushbutton_tcp_on_toggled(bool checked)
@@ -291,10 +307,12 @@ void ServerSetting::on_m_pushbutton_tcp_on_toggled(bool checked)
     if(checked)
     {
         OpenTCPServer();
+        ui->m_pushbutton_tcp_on->setStyleSheet("background-color: rgb(85, 255, 0);");
     }
     else
     {
         CloseTCPServer();
+        ui->m_pushbutton_tcp_on->setStyleSheet("background-color: rgb(255, 0, 0);");
     }
     emit ServerStateChanged();
 }
@@ -305,10 +323,12 @@ void ServerSetting::on_m_pushbutton_com_on_toggled(bool checked)
     if(checked)
     {
         OpenSerialPort();
+        ui->m_pushbutton_com_on->setStyleSheet("background-color: rgb(85, 255, 0);");
     }
     else
     {
         CloseSerialPort();
+        ui->m_pushbutton_com_on->setStyleSheet("background-color: rgb(255, 0, 0);");
     }
     emit ServerStateChanged();
 }

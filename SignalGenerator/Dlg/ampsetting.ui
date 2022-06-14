@@ -50,7 +50,7 @@
            <item row="0" column="1">
             <widget class="QComboBox" name="m_combobox_srate">
              <property name="currentIndex">
-              <number>3</number>
+              <number>0</number>
              </property>
              <item>
               <property name="text">

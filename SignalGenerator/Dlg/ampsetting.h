@@ -16,6 +16,7 @@ public:
     explicit AmpSetting(QWidget *parent = nullptr);
     ~AmpSetting();
     QString GetSrate();
+    void SetSrate(int srate);
 
 private:
     Ui::AmpSetting *ui;

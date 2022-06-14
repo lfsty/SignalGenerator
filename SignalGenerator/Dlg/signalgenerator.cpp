@@ -26,13 +26,17 @@ SignalGenerator::SignalGenerator(QWidget *parent)
     connect(&m_timer_gendata, &QTimer::timeout, this, &SignalGenerator::on_m_timer_gendata_timeout);
     connect(m_serversetting_dialog, &ServerSetting::ServerStateChanged, this, [ = ]()
     {
-        if(!m_serversetting_dialog->IsServerOn() && !m_timer_gendata.isActive())
+        if(m_serversetting_dialog->IsServerOn() && !m_timer_gendata.isActive())
         {
             m_timer_gendata.start();
+            ui->scrollArea->setDisabled(true);
+            m_ampsetting_dialog->setDisabled(true);
         }
-        else
+        else if(!m_serversetting_dialog->IsServerOn() && m_timer_gendata.isActive())
         {
             m_timer_gendata.stop();
+            ui->scrollArea->setDisabled(false);
+            m_ampsetting_dialog->setDisabled(false);
         }
     });
 
@@ -41,7 +45,18 @@ SignalGenerator::SignalGenerator(QWidget *parent)
     m_timer_update_serverdata_s.setTimerType(Qt::PreciseTimer);
     connect(&m_timer_update_serverdata_s, &QTimer::timeout, this, [ = ]()
     {
-        this->setWindowTitle("当前每秒发送帧数:" + QString::number(m_send_frame_s));
+//        this->setWindowTitle("当前每秒发送帧数:" + QString::number(m_send_frame_s));
+        ui->m_lcd_send_frame_num->display(m_send_frame_s);
+//        QPalette lcdpat = ui->m_lcd_send_frame_num->palette();
+//        if(m_send_frame_s >=  ui->m_lineedit_srate->text().toInt())
+//        {
+//            lcdpat.setColor(QPalette::Normal, QPalette::WindowText, Qt::green);
+//        }
+//        else
+//        {
+//            lcdpat.setColor(QPalette::Normal, QPalette::WindowText, Qt::red);
+//        }
+//        ui->m_lcd_send_frame_num->setPalette(lcdpat);
         m_send_frame_s = 0;
     });
     m_timer_update_serverdata_s.start();
@@ -54,6 +69,8 @@ SignalGenerator::SignalGenerator(QWidget *parent)
         this->setStyleSheet(QLatin1String(qssFile.readAll()));
         qssFile.close();
     }
+
+
 }
 
 SignalGenerator::~SignalGenerator()
@@ -90,6 +107,7 @@ void SignalGenerator::on_m_setting_server_action_triggered()
 
 void SignalGenerator::on_m_setting_generator_action_triggered()
 {
+    m_ampsetting_dialog->SetSrate(ui->m_lineedit_srate->text().toInt());
     m_ampsetting_dialog->show();
     if(m_ampsetting_dialog->exec())
     {
@@ -128,11 +146,11 @@ void SignalGenerator::on_m_timer_gendata_timeout()
             }
         }
 
-        m_serversetting_dialog->TcpSend(data);
-        m_serversetting_dialog->SerialPortSend(data);
-
+        if(m_serversetting_dialog->TcpSend(data) || m_serversetting_dialog->SerialPortSend(data))
+        {
+            m_send_frame_s++;
+        }
         time_ms++;
-        m_send_frame_s++;
 
     }
 }

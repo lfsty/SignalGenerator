@@ -29,6 +29,13 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>采样率</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="1">
        <widget class="QLineEdit" name="m_lineedit_srate">
         <property name="enabled">
@@ -46,13 +53,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>采样率</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="3">
        <widget class="QLineEdit" name="m_lineedit_ch_num">
         <property name="enabled">
@@ -63,9 +63,26 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="1">
+       <widget class="QLCDNumber" name="m_lcd_send_frame_num">
+        <property name="digitCount">
+         <number>5</number>
+        </property>
+        <property name="segmentStyle">
+         <enum>QLCDNumber::Flat</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>当前每秒发送帧数</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
-    <item row="1" column="0">
+    <item row="2" column="0">
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
        <widget class="QScrollArea" name="scrollArea">
@@ -81,7 +98,7 @@
            <x>0</x>
            <y>0</y>
            <width>274</width>
-           <height>289</height>
+           <height>262</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_6">

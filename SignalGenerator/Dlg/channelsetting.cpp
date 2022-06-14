@@ -29,6 +29,7 @@ ChannelSetting::ChannelSetting(Channel *from_channel, QWidget *parent) :
     //更新绘图
     on_update_data_chart();
 
+
 }
 
 ChannelSetting::~ChannelSetting()
@@ -129,21 +130,35 @@ void ChannelSetting::on_update_data_chart()
     if(m_line_series != nullptr)
     {
         m_line_series->clear();
-        float max = 0, min = 0;
+        float max, min;
         for(qint64 tm_ms = 0; tm_ms < CHART_POINT; tm_ms++)
         {
             float data = m_channel->GenData(tm_ms);
-            if(data > max)
+
+            if(tm_ms == 0)
             {
-                max = data;
+                max = min = data;
             }
-            if(data < min)
+            else
             {
-                min = data;
+                if(data > max)
+                {
+                    max = data;
+                }
+                if(data < min)
+                {
+                    min = data;
+                }
             }
+
             m_line_series->append(tm_ms, data);
         }
-        float axix_delta = (max - min) * 0.1;
+
+        float axix_delta = 1;
+        if(max != min)
+        {
+            axix_delta = (max - min) * 0.1;
+        }
         m_axisY->setMax(max + axix_delta);
         m_axisY->setMin(min - axix_delta);
     }

@@ -31,20 +31,23 @@ private slots:
 
 private:
     Ui::ServerSetting *ui;
-private:
     //  通信接口
     QTcpServer m_tcpserver;
     QList<QTcpSocket *> m_tcp_client_socket_list;
     QSerialPort m_serialPort;
+private:
+    QByteArray m_com_protocol;
 private:
     void CloseTCPServer();
     void OpenTCPServer();
     void CloseSerialPort();
     void OpenSerialPort();
 public:
-    void TcpSend(QByteArray senddata);
-    void SerialPortSend(QByteArray senddata);
+    bool TcpSend(QByteArray senddata);
+    bool SerialPortSend(QByteArray senddata);
     bool IsServerOn();
+private:
+    void showEvent(QShowEvent *event);
 
 signals:
     void ServerStateChanged();
