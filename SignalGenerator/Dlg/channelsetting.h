@@ -4,12 +4,15 @@
 #include <QDialog>
 #include "sigsetting.h"
 #include <QString>
-#include "sigdc.h"
 #include <QList>
+#include "channel.h"
+
+//绘图
 #include <QChart>
 #include <QLineSeries>
 #include <QValueAxis>
 #include <QLegendMarker>
+
 #define CHART_POINT 1000
 namespace Ui
 {
@@ -21,24 +24,20 @@ class ChannelSetting : public QDialog
     Q_OBJECT
 
 public:
-    explicit ChannelSetting(QWidget *parent = nullptr);
-    ChannelSetting(QWidget *parent, ChannelSetting *from_copy_widget);
+    explicit ChannelSetting(Channel *from_channel, QWidget *parent = nullptr);
     ~ChannelSetting();
 public:
     QString GetChName();
-    void SetChName(QString name);
-    float GenData(quint64 tm_ms);
+    Channel *GetChannel();
 private:
-    QList<SimSig::SigDef *> m_list_sig;
-    QList<SimSig::SigDef *> GetSigListCopy();
-
+    Channel *m_channel = nullptr;
 
 private slots:
     void on_m_pushbutton_addsig_clicked();
 
     void on_update_data_chart();
 
-
+//绘图
 private:
     Ui::ChannelSetting *ui;
     QChart *m_chart = nullptr;

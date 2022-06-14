@@ -101,10 +101,11 @@ void SignalGenerator::on_m_setting_generator_action_triggered()
 
 void SignalGenerator::on_m_pushbutton_add_ch_clicked()
 {
-    ChannelWidget *channel_widget = new ChannelWidget(this);
+    //导联默认名
+    QString default_ch_name = "ch" + QString::number(ui->m_lineedit_ch_num->text().toInt() + 1);
 
-    //添加导联默认名
-    channel_widget->SetChannelName("ch" + QString::number(ui->m_lineedit_ch_num->text().toInt() + 1));
+    ChannelWidget *channel_widget = new ChannelWidget(this, default_ch_name);
+
     AddChnnel(channel_widget);
 }
 
@@ -136,9 +137,9 @@ void SignalGenerator::on_m_timer_gendata_timeout()
     }
 }
 
-void SignalGenerator::on_m_copy_channel_clicked(ChannelWidget *pChannelWidget)
+void SignalGenerator::on_m_copy_channel_clicked(Channel *pChannel)
 {
-    ChannelWidget *new_channelwidget = new ChannelWidget(this, pChannelWidget);
+    ChannelWidget *new_channelwidget = new ChannelWidget(this, pChannel);
     AddChnnel(new_channelwidget);
 }
 

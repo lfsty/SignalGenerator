@@ -1,7 +1,7 @@
 #include "channelsetting.h"
 #include "ui_channelsetting.h"
 
-ChannelSetting::ChannelSetting(QWidget *parent) :
+ChannelSetting::ChannelSetting(Channel *from_channel, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ChannelSetting)
 {
@@ -9,25 +9,13 @@ ChannelSetting::ChannelSetting(QWidget *parent) :
     ui->m_tableWidget_sig->setColumnWidth(0, 50);
     ui->m_tableWidget_sig->horizontalHeader()->setStretchLastSection(true);
 
-    init_chart();
-    //更新绘图
-    on_update_data_chart();
 
-}
+    m_channel = from_channel->GetCopy(this);
 
-ChannelSetting::ChannelSetting(QWidget *parent, ChannelSetting *from_copy_widget):
-    QDialog(parent),
-    ui(new Ui::ChannelSetting)
-{
-    ui->setupUi(this);
-    ui->m_tableWidget_sig->setColumnWidth(0, 50);
-    ui->m_tableWidget_sig->horizontalHeader()->setStretchLastSection(true);
+    ui->m_lineedit_ch_name->setText(m_channel->GetChName());
 
-    ui->m_lineedit_ch_name->setText(from_copy_widget->GetChName());
-    m_list_sig = from_copy_widget->GetSigListCopy();
-
-    //跟新table_widget
-    for(auto sig : m_list_sig)
+    //更新信号列表
+    for(auto sig : m_channel->m_list_sig)
     {
         int current_line = ui->m_tableWidget_sig->rowCount();
         ui->m_tableWidget_sig->setRowCount(current_line + 1);
@@ -36,8 +24,8 @@ ChannelSetting::ChannelSetting(QWidget *parent, ChannelSetting *from_copy_widget
         ui->m_tableWidget_sig->setItem(current_line, 1, new QTableWidgetItem(sig->GetDescription()));
     }
 
-    init_chart();
 
+    init_chart();
     //更新绘图
     on_update_data_chart();
 
@@ -46,11 +34,9 @@ ChannelSetting::ChannelSetting(QWidget *parent, ChannelSetting *from_copy_widget
 ChannelSetting::~ChannelSetting()
 {
     delete ui;
-    foreach(auto sig, m_list_sig)
+    if(m_channel != nullptr)
     {
-        m_list_sig.removeOne(sig);
-        delete sig;
-        sig = nullptr;
+        m_channel->deleteLater();
     }
 
     if(m_chart != nullptr)
@@ -72,34 +58,14 @@ ChannelSetting::~ChannelSetting()
     }
 }
 
+Channel *ChannelSetting::GetChannel()
+{
+    return m_channel->GetCopy(this->parent());
+}
+
 QString ChannelSetting::GetChName()
 {
     return ui->m_lineedit_ch_name->text();
-}
-
-void ChannelSetting::SetChName(QString name)
-{
-    ui->m_lineedit_ch_name->setText(name);
-}
-
-float ChannelSetting::GenData(quint64 tm_ms)
-{
-    float data = 0;
-    for(auto sig : m_list_sig)
-    {
-        data += sig->GenData(tm_ms);
-    }
-    return data;
-}
-
-QList<SimSig::SigDef *> ChannelSetting::GetSigListCopy()
-{
-    QList<SimSig::SigDef *> SigList;
-    for(auto sig : m_list_sig)
-    {
-        SigList.push_back(sig->GetCopy());
-    }
-    return SigList;
 }
 
 void ChannelSetting::init_chart()
@@ -146,7 +112,7 @@ void ChannelSetting::on_m_pushbutton_addsig_clicked()
         SimSig::SigDef *sig = w.GetSig();
         if(sig != nullptr)
         {
-            m_list_sig.push_back(sig);
+            m_channel->m_list_sig.push_back(sig);
 
             int current_line = ui->m_tableWidget_sig->rowCount();
             ui->m_tableWidget_sig->setRowCount(current_line + 1);
@@ -166,7 +132,7 @@ void ChannelSetting::on_update_data_chart()
         float max = 0, min = 0;
         for(qint64 tm_ms = 0; tm_ms < CHART_POINT; tm_ms++)
         {
-            float data = GenData(tm_ms);
+            float data = m_channel->GenData(tm_ms);
             if(data > max)
             {
                 max = data;

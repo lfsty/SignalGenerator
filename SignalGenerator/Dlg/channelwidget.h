@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "channelsetting.h"
 #include <QString>
+#include "channel.h"
 namespace Ui
 {
     class ChannelWidget;
@@ -14,12 +15,12 @@ class ChannelWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit ChannelWidget(QWidget *parent = nullptr);
-    ChannelWidget(QWidget *parent, ChannelWidget *from_cpoy_widget);
+    explicit ChannelWidget(QWidget *parent = nullptr, QString ch_name = "");
+    ChannelWidget(QWidget *parent, Channel *from_cpoy_channel);
     ~ChannelWidget();
     float GenData(quint64 tm_ms);
-public:
-    void SetChannelName(QString ch_name);
+private:
+    Channel *m_channel = nullptr;
 
 private slots:
     void on_m_pushButton_copy_clicked();
@@ -30,11 +31,10 @@ private slots:
 
 private:
     Ui::ChannelWidget *ui;
-    ChannelSetting *m_channelsetting_dialog = nullptr;
 
 signals:
     void ChannelDelete();
-    void CopyChannel(ChannelWidget *);
+    void CopyChannel(Channel *);
 
 };
 

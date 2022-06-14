@@ -76,7 +76,6 @@ void SigSetting::on_buttonBox_accepted()
                 sig->SetAmp(ui->m_lineedit_main_60_amp->text().toInt());
                 m_sig = sig;
                 break;
-                break;
             }
         default:
             break;

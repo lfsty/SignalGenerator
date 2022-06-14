@@ -7,6 +7,7 @@
 #include "channelwidget.h"
 #include <QTimer>
 #include <QFile>
+#include "channel.h"
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
@@ -34,7 +35,7 @@ private slots:
 
     void on_m_timer_gendata_timeout();
 
-    void on_m_copy_channel_clicked(ChannelWidget *pChannelWidget);
+    void on_m_copy_channel_clicked(Channel *pChannel);
 
     void on_m_del_channel_clicked();
 

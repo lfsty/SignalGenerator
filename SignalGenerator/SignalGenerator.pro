@@ -15,6 +15,7 @@ SOURCES += \
     Dlg/serversetting.cpp \
     Dlg/signalgenerator.cpp \
     Dlg/sigsetting.cpp \
+    Sig/channel.cpp \
     Sig/sigcos.cpp \
     Sig/sigdc.cpp \
     Sig/sigdef.cpp \
@@ -29,6 +30,8 @@ HEADERS += \
     Dlg/serversetting.h \
     Dlg/signalgenerator.h \
     Dlg/sigsetting.h \
+    Sig/channel.h \
+    Sig/sigall.h \
     Sig/sigcos.h \
     Sig/sigdc.h \
     Sig/sigdef.h \
