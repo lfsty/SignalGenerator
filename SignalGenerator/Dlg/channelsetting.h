@@ -38,6 +38,8 @@ private slots:
     void on_update_data_chart();
 
 //绘图
+    void on_buttonBox_accepted();
+
 private:
     Ui::ChannelSetting *ui;
     QChart *m_chart = nullptr;

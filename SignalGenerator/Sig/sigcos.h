@@ -2,7 +2,6 @@
 #define SIGCOS_H
 #include "sigdef.h"
 
-
 namespace SimSig
 {
     class SigCos : public SigDef
@@ -22,6 +21,8 @@ namespace SimSig
         virtual void SetDescription();
         virtual QString GetTypeStr();
         virtual SigDef *GetCopy();
+        virtual QJsonObject GenJsonData();
+        virtual void ParseJsonData(QJsonObject data_obj);
     };
 }
 

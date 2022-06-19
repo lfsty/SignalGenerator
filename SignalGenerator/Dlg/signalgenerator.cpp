@@ -192,3 +192,37 @@ void SignalGenerator::AddChnnel(ChannelWidget *new_ch_widget)
     UpDateChannelNum();
 }
 
+
+void SignalGenerator::on_m_file_open_action_triggered()
+{
+    qDebug()<<"打开文件";
+}
+
+
+void SignalGenerator::on_m_file_save_action_triggered()
+{
+    qDebug()<<"保存文件";
+
+    QJsonObject data_json_root;
+
+    QJsonArray ch_json_array;
+    for(int i = 0; i < ui->m_verlayout_ch->count(); i++)
+    {
+        ChannelWidget *chan_widget = qobject_cast<ChannelWidget *>(ui->m_verlayout_ch->itemAt(i)->widget());
+        if(chan_widget != 0)
+        {
+            ch_json_array.push_back(QJsonValue(chan_widget->GenJsonObject()));
+        }
+    }
+    data_json_root["ChData"] = ch_json_array;
+
+
+    qDebug()<<data_json_root;
+}
+
+
+void SignalGenerator::on_m_file_save_as_action_triggered()
+{
+    qDebug()<<"另存为文件";
+}
+

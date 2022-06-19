@@ -35,3 +35,17 @@ QString SimSig::SigDef::GetDescription()
 {
     return m_description_str;
 }
+
+QJsonObject SimSig::SigDef::GenJsonData()
+{
+    QJsonObject data_obj;
+    data_obj["Type"] = GetType();
+    data_obj["Amp"] = GetAmp();
+    return data_obj;
+}
+
+void SimSig::SigDef::ParseJsonData(QJsonObject data_obj)
+{
+    SetType(static_cast<SigType>(data_obj["Type"].toInt()));
+    SetAmp(data_obj["Amp"].toInt());
+}

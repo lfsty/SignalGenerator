@@ -60,3 +60,16 @@ SimSig::SigDef *SimSig::SigMain::GetCopy()
     return new_sig;
 }
 
+QJsonObject SimSig::SigMain::GenJsonData()
+{
+    QJsonObject data_obj = __super::GenJsonData();
+    data_obj["MainType"] = m_main_freq_type;
+    return data_obj;
+}
+
+void SimSig::SigMain::ParseJsonData(QJsonObject data_obj)
+{
+    __super::ParseJsonData(data_obj);
+    m_main_freq_type = static_cast<MainFreqType>(data_obj["MainType"].toInt());
+}
+

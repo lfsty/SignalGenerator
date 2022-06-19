@@ -55,3 +55,18 @@ SimSig::SigDef *SimSig::SigCos::GetCopy()
     new_sig->SetDescription();
     return new_sig;
 }
+
+QJsonObject SimSig::SigCos::GenJsonData()
+{
+   QJsonObject data_obj = __super::GenJsonData();
+   data_obj["Freq"] = GetFreq();
+   data_obj["Phase"] = GetPhaseMs();
+   return data_obj;
+}
+
+void SimSig::SigCos::ParseJsonData(QJsonObject data_obj)
+{
+    __super::ParseJsonData(data_obj);
+    SetFreq(data_obj["Freq"].toInt());
+    SetPhaseMs(data_obj["Phase"].toInt());
+}

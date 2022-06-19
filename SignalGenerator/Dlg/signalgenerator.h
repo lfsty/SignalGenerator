@@ -39,6 +39,12 @@ private slots:
 
     void on_m_del_channel_clicked();
 
+    void on_m_file_open_action_triggered();
+
+    void on_m_file_save_action_triggered();
+
+    void on_m_file_save_as_action_triggered();
+
 private:
     Ui::SignalGenerator *ui;
     ServerSetting *m_serversetting_dialog = nullptr;

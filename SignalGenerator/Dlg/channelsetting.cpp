@@ -163,3 +163,9 @@ void ChannelSetting::on_update_data_chart()
         m_axisY->setMin(min - axix_delta);
     }
 }
+
+void ChannelSetting::on_buttonBox_accepted()
+{
+    m_channel->SetChName(ui->m_lineedit_ch_name->text());
+}
+

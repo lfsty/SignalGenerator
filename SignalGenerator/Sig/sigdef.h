@@ -3,6 +3,7 @@
 #include <QtGlobal>
 #include <QtMath>
 #include <QString>
+#include <QJsonObject>
 namespace SimSig
 {
     enum SigType
@@ -39,6 +40,8 @@ namespace SimSig
         virtual void SetDescription() = 0;
         virtual QString GetTypeStr() = 0;
         virtual SigDef *GetCopy() = 0;
+        virtual QJsonObject GenJsonData();
+        virtual void ParseJsonData(QJsonObject data_obj);
     };
 }
 

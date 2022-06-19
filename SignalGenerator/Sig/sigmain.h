@@ -11,7 +11,7 @@ namespace SimSig
     public:
         enum MainFreqType
         {
-            Main50,
+            Main50 = 0,
             Main60
         };
     private:
@@ -24,6 +24,8 @@ namespace SimSig
         virtual void SetDescription();
         virtual QString GetTypeStr();
         virtual SigDef *GetCopy();
+        virtual QJsonObject GenJsonData();
+        virtual void ParseJsonData(QJsonObject data_obj);
     };
 }
 #endif // SIGMAIN_H

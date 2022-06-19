@@ -19,6 +19,8 @@ public:
     ChannelWidget(QWidget *parent, Channel *from_cpoy_channel);
     ~ChannelWidget();
     float GenData(quint64 tm_ms);
+    QJsonObject GenJsonObject();
+    void ParseJsonObject(QJsonObject data_obj);
 private:
     Channel *m_channel = nullptr;
 

@@ -5,6 +5,8 @@
 #include <QString>
 #include <QList>
 #include "sigall.h"
+#include <QJsonArray>
+#include <QJsonValue>
 class Channel : public QObject
 {
     Q_OBJECT
@@ -12,17 +14,19 @@ class Channel : public QObject
 public:
     explicit Channel(QObject *parent = nullptr);
     ~Channel();
+    Channel *GetCopy(QObject *parent);
 
 private:
     QString m_ch_name = "";
     QList<SimSig::SigDef *> m_list_sig;
+    SimSig::SigDef *GenSigFromJsonObj(QJsonObject data_obj);
 
 public:
     QString GetChName();
     void SetChName(QString name);
-public:
+    QJsonObject GenJsonObject();
+    void ParseJsonObject(QJsonObject data_obj);
     float GenData(quint64 tm_ms);
-    Channel *GetCopy(QObject *parent);
 
 signals:
 

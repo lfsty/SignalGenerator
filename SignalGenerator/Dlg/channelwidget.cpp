@@ -47,6 +47,19 @@ float ChannelWidget::GenData(quint64 tm_ms)
     return m_channel->GenData(tm_ms);
 }
 
+QJsonObject ChannelWidget::GenJsonObject()
+{
+    return m_channel->GenJsonObject();
+}
+
+void ChannelWidget::ParseJsonObject(QJsonObject data_obj)
+{
+    if(m_channel != nullptr){
+        m_channel->ParseJsonObject(data_obj);
+        ui->m_label_name->setText(m_channel->GetChName());
+    }
+}
+
 void ChannelWidget::on_m_pushButton_copy_clicked()
 {
     emit CopyChannel(this->m_channel);
@@ -62,8 +75,7 @@ void ChannelWidget::on_m_pushButton_setting_clicked()
     {
         m_channel->deleteLater();
         m_channel = w.GetChannel();
-        ui->m_label_name->setText(w.GetChName());
-        m_channel->SetChName(w.GetChName());
+        ui->m_label_name->setText(m_channel->GetChName());
     }
 }
 

@@ -19,6 +19,8 @@ namespace SimSig
         virtual void SetDescription();
         virtual QString GetTypeStr();
         virtual SigDef *GetCopy();
+        virtual QJsonObject GenJsonData();
+        virtual void ParseJsonData(QJsonObject data_obj);
     };
 }
 #endif // SIGDC_H
