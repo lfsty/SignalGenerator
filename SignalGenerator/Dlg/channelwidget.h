@@ -13,7 +13,6 @@ namespace Ui
 class ChannelWidget : public QWidget
 {
     Q_OBJECT
-
 public:
     explicit ChannelWidget(QWidget *parent = nullptr, QString ch_name = "");
     ChannelWidget(QWidget *parent, Channel *from_cpoy_channel);

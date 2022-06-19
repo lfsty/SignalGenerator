@@ -8,6 +8,9 @@
 #include <QTimer>
 #include <QFile>
 #include "channel.h"
+#include <QJsonDocument>
+#include <QFileDialog>
+#include <QMessageBox>
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
@@ -25,6 +28,7 @@ public:
 private:
     QTimer m_timer_gendata;
     QTimer m_timer_update_serverdata_s;
+    QString m_save_file_path = "";
 
 private slots:
     void on_m_setting_server_action_triggered();
@@ -53,6 +57,8 @@ private:
 private:
     void UpDateChannelNum();
     void AddChnnel(ChannelWidget *new_ch_widget);
+    QByteArray GenSettingDataByteArray();
+    void ClearAllChannelWidget();
 private:
     int m_send_frame_s = 0;
 };
