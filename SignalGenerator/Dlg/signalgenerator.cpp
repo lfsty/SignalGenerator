@@ -161,24 +161,25 @@ void SignalGenerator::on_m_copy_channel_clicked(Channel *pChannel)
     AddChnnel(new_channelwidget);
 }
 
-void SignalGenerator::on_m_del_channel_clicked()
+void SignalGenerator::on_m_del_channel_clicked(ChannelWidget *pChannelWidget)
 {
-    ui->m_lineedit_ch_num->setText(QString::number(ui->m_lineedit_ch_num->text().toInt() - 1));
+    m_channel_widget_list.removeOne(pChannelWidget);
+    UpDateChannelNum();
 }
 
 void SignalGenerator::UpDateChannelNum()
 {
-    int count = 0;
-    for(int i = 0; i < ui->m_verlayout_ch->count(); i++)
-    {
-        ChannelWidget *chan_widget = qobject_cast<ChannelWidget *>(ui->m_verlayout_ch->itemAt(i)->widget());
-        if(chan_widget != 0)
-        {
-            count++;
-        }
-    }
+//    int count = 0;
+//    for(int i = 0; i < ui->m_verlayout_ch->count(); i++)
+//    {
+//        ChannelWidget *chan_widget = qobject_cast<ChannelWidget *>(ui->m_verlayout_ch->itemAt(i)->widget());
+//        if(chan_widget != 0)
+//        {
+//            count++;
+//        }
+//    }
 
-    ui->m_lineedit_ch_num->setText(QString::number(count));
+    ui->m_lineedit_ch_num->setText(QString::number(m_channel_widget_list.count()));
 
 }
 
@@ -190,6 +191,9 @@ void SignalGenerator::AddChnnel(ChannelWidget *new_ch_widget)
 
     //导联删除时更新主界面导联数
     connect(new_ch_widget, &ChannelWidget::ChannelDelete, this, &SignalGenerator::on_m_del_channel_clicked);
+
+    m_channel_widget_list.push_back(new_ch_widget);
+
     UpDateChannelNum();
 }
 
@@ -223,7 +227,7 @@ void SignalGenerator::ClearAllChannelWidget()
         ChannelWidget *chan_widget = qobject_cast<ChannelWidget *>(ui->m_verlayout_ch->itemAt(i)->widget());
         if(chan_widget != 0)
         {
-            chan_widget->deleteLater();
+            chan_widget->on_m_pushButton_delete_clicked();
         }
     }
 }
@@ -231,8 +235,7 @@ void SignalGenerator::ClearAllChannelWidget()
 void SignalGenerator::on_m_file_open_action_triggered()
 {
     QString fileName;
-    fileName = QFileDialog::getOpenFileName(this,"打开文件", "", "信号发生器设置文件(*.json)");
-    bool parse_json_result = false;
+    fileName = QFileDialog::getOpenFileName(this, "打开文件", "", "信号发生器设置文件(*.json)");
 
     if (!fileName.isNull())
     {
@@ -243,16 +246,16 @@ void SignalGenerator::on_m_file_open_action_triggered()
             loadFile.close();
 
             QJsonParseError jsonError;
-            QJsonDocument data_doc = QJsonDocument::fromJson(allData , &jsonError);
+            QJsonDocument data_doc = QJsonDocument::fromJson(allData, &jsonError);
             if(!data_doc.isNull() && (jsonError.error == QJsonParseError::NoError))
             {
                 ClearAllChannelWidget();
-                parse_json_result = true;
                 m_save_file_path = fileName;
 
                 QJsonObject data_root_obj = data_doc.object();
                 QJsonArray ch_data_array = data_root_obj["ChData"].toArray();
-                for(auto iter:ch_data_array){
+                for(auto iter : ch_data_array)
+                {
                     QJsonObject single_ch_obj = iter.toObject();
                     ChannelWidget *channel_widget = new ChannelWidget(this);
                     channel_widget->ParseJsonObject(single_ch_obj);
@@ -261,23 +264,20 @@ void SignalGenerator::on_m_file_open_action_triggered()
             }
         }
     }
-
-    if(parse_json_result){
-        QMessageBox::information(this, "读取结果", "读取成功~！");
-    }else{
-        QMessageBox::information(this, "读取结果", "读取失败QAQ");
-    }
 }
 
 
 void SignalGenerator::on_m_file_save_action_triggered()
 {
-    bool save_file_result = false;
 
-    if(m_save_file_path.isEmpty()){
+
+    if(m_save_file_path.isEmpty())
+    {
         on_m_file_save_as_action_triggered();
     }
-    else{
+    else
+    {
+        bool save_file_result = false;
         QFile loadFile(m_save_file_path);
         if (loadFile.open(QIODevice::WriteOnly))
         {
@@ -285,11 +285,15 @@ void SignalGenerator::on_m_file_save_action_triggered()
             loadFile.close();
             save_file_result = true;
         }
-    }
-    if(save_file_result){
-        QMessageBox::information(this, "保存结果", "保存成功~！");
-    }else{
-        QMessageBox::information(this, "保存结果", "保存失败QAQ");
+
+        if(save_file_result)
+        {
+            QMessageBox::information(this, "保存结果", "保存成功~！");
+        }
+        else
+        {
+            QMessageBox::information(this, "保存结果", "保存失败QAQ");
+        }
     }
 }
 
@@ -297,7 +301,7 @@ void SignalGenerator::on_m_file_save_action_triggered()
 void SignalGenerator::on_m_file_save_as_action_triggered()
 {
     //保存文件
-    QString fileName = QFileDialog::getSaveFileName(this,"选择保存地址", "", "信号发生器设置文件(*.json)");
+    QString fileName = QFileDialog::getSaveFileName(this, "选择保存地址", "", "信号发生器设置文件(*.json)");
     bool save_file_result = false;
     if (!fileName.isNull())
     {
@@ -310,9 +314,12 @@ void SignalGenerator::on_m_file_save_as_action_triggered()
             m_save_file_path = fileName;
         }
     }
-    if(save_file_result){
+    if(save_file_result)
+    {
         QMessageBox::information(this, "保存结果", "保存成功~！");
-    }else{
+    }
+    else
+    {
         QMessageBox::information(this, "保存结果", "保存失败QAQ");
     }
 }

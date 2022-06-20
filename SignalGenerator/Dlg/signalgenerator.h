@@ -41,7 +41,7 @@ private slots:
 
     void on_m_copy_channel_clicked(Channel *pChannel);
 
-    void on_m_del_channel_clicked();
+    void on_m_del_channel_clicked(ChannelWidget *pChannelWidget);
 
     void on_m_file_open_action_triggered();
 
@@ -53,6 +53,7 @@ private:
     Ui::SignalGenerator *ui;
     ServerSetting *m_serversetting_dialog = nullptr;
     AmpSetting *m_ampsetting_dialog = nullptr;
+    QList<ChannelWidget *> m_channel_widget_list;
 
 private:
     void UpDateChannelNum();

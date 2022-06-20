@@ -27,14 +27,14 @@ private slots:
     void on_m_pushButton_copy_clicked();
 
     void on_m_pushButton_setting_clicked();
-
+public slots:
     void on_m_pushButton_delete_clicked();
 
 private:
     Ui::ChannelWidget *ui;
 
 signals:
-    void ChannelDelete();
+    void ChannelDelete(ChannelWidget *);
     void CopyChannel(Channel *);
 
 };

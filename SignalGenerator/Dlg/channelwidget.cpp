@@ -54,7 +54,8 @@ QJsonObject ChannelWidget::GenJsonObject()
 
 void ChannelWidget::ParseJsonObject(QJsonObject data_obj)
 {
-    if(m_channel != nullptr){
+    if(m_channel != nullptr)
+    {
         m_channel->ParseJsonObject(data_obj);
         ui->m_label_name->setText(m_channel->GetChName());
     }
@@ -83,5 +84,5 @@ void ChannelWidget::on_m_pushButton_setting_clicked()
 void ChannelWidget::on_m_pushButton_delete_clicked()
 {
     this->deleteLater();
-    emit ChannelDelete();
+    emit ChannelDelete(this);
 }
