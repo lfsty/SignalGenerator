@@ -49,6 +49,8 @@ private slots:
 
     void on_m_file_save_as_action_triggered();
 
+    void on_m_pushbutton_send_frame_clicked();
+
 private:
     Ui::SignalGenerator *ui;
     ServerSetting *m_serversetting_dialog = nullptr;

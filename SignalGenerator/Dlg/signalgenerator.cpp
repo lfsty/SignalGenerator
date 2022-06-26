@@ -28,13 +28,17 @@ SignalGenerator::SignalGenerator(QWidget *parent)
     {
         if(m_serversetting_dialog->IsServerOn() && !m_timer_gendata.isActive())
         {
-            m_timer_gendata.start();
+            if(ui->m_lineedit_srate->text().toInt() != 0){
+                m_timer_gendata.start();
+            }
             ui->scrollArea->setDisabled(true);
             m_ampsetting_dialog->setDisabled(true);
         }
-        else if(!m_serversetting_dialog->IsServerOn() && m_timer_gendata.isActive())
+        else if(!m_serversetting_dialog->IsServerOn() )
         {
-            m_timer_gendata.stop();
+            if(m_timer_gendata.isActive()){
+                m_timer_gendata.stop();
+            }
             ui->scrollArea->setDisabled(false);
             m_ampsetting_dialog->setDisabled(false);
         }
@@ -70,6 +74,7 @@ SignalGenerator::SignalGenerator(QWidget *parent)
         qssFile.close();
     }
 
+    ui->m_pushbutton_send_frame->setVisible(false);
 
 }
 
@@ -111,8 +116,15 @@ void SignalGenerator::on_m_setting_generator_action_triggered()
     m_ampsetting_dialog->show();
     if(m_ampsetting_dialog->exec())
     {
-        ui->m_lineedit_srate->setText(m_ampsetting_dialog->GetSrate());
-        m_timer_gendata.setInterval(1000 / m_ampsetting_dialog->GetSrate().toInt());
+        QString srate_str = m_ampsetting_dialog->GetSrate();
+        ui->m_lineedit_srate->setText(srate_str);
+        if(srate_str.toInt() != 0){
+            m_timer_gendata.setInterval(1000 / m_ampsetting_dialog->GetSrate().toInt());
+            ui->m_pushbutton_send_frame->setVisible(false);
+        }else{
+            m_timer_gendata.setInterval(0);
+            ui->m_pushbutton_send_frame->setVisible(true);
+        }
     }
 }
 
@@ -322,5 +334,11 @@ void SignalGenerator::on_m_file_save_as_action_triggered()
     {
         QMessageBox::information(this, "保存结果", "保存失败QAQ");
     }
+}
+
+
+void SignalGenerator::on_m_pushbutton_send_frame_clicked()
+{
+    on_m_timer_gendata_timeout();
 }
 

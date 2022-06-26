@@ -31,7 +31,7 @@
      <item row="0" column="0">
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="m_tab_tcp">
         <attribute name="title">
@@ -170,7 +170,7 @@
            <x>7</x>
            <y>7</y>
            <width>241</width>
-           <height>154</height>
+           <height>193</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
