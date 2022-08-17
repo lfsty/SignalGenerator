@@ -1,6 +1,6 @@
 #include "signalgenerator.h"
 #include "ui_signalgenerator.h"
-#include<QDateTime>
+
 SignalGenerator::SignalGenerator(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::SignalGenerator)
@@ -28,7 +28,8 @@ SignalGenerator::SignalGenerator(QWidget *parent)
     {
         if(m_serversetting_dialog->IsServerOn() && !m_timer_gendata.isActive())
         {
-            if(ui->m_lineedit_srate->text().toInt() != 0){
+            if(ui->m_lineedit_srate->text().toInt() != 0)
+            {
                 m_timer_gendata.start();
             }
             ui->scrollArea->setDisabled(true);
@@ -36,7 +37,8 @@ SignalGenerator::SignalGenerator(QWidget *parent)
         }
         else if(!m_serversetting_dialog->IsServerOn() )
         {
-            if(m_timer_gendata.isActive()){
+            if(m_timer_gendata.isActive())
+            {
                 m_timer_gendata.stop();
             }
             ui->scrollArea->setDisabled(false);
@@ -118,10 +120,13 @@ void SignalGenerator::on_m_setting_generator_action_triggered()
     {
         QString srate_str = m_ampsetting_dialog->GetSrate();
         ui->m_lineedit_srate->setText(srate_str);
-        if(srate_str.toInt() != 0){
+        if(srate_str.toInt() != 0)
+        {
             m_timer_gendata.setInterval(1000 / m_ampsetting_dialog->GetSrate().toInt());
             ui->m_pushbutton_send_frame->setVisible(false);
-        }else{
+        }
+        else
+        {
             m_timer_gendata.setInterval(0);
             ui->m_pushbutton_send_frame->setVisible(true);
         }
@@ -340,5 +345,17 @@ void SignalGenerator::on_m_file_save_as_action_triggered()
 void SignalGenerator::on_m_pushbutton_send_frame_clicked()
 {
     on_m_timer_gendata_timeout();
+}
+
+
+void SignalGenerator::on_m_pushbutton_mark_clicked()
+{
+    qDebug() << "mark";
+}
+
+void SignalGenerator::keyPressEvent(QKeyEvent *e)
+{
+    qDebug() << e->key();
+    qDebug() << e->text();
 }
 

@@ -11,6 +11,9 @@
 #include <QJsonDocument>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QKeyEvent>
+
+
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
@@ -50,6 +53,10 @@ private slots:
     void on_m_file_save_as_action_triggered();
 
     void on_m_pushbutton_send_frame_clicked();
+
+    void on_m_pushbutton_mark_clicked();
+
+    void keyPressEvent(QKeyEvent *e);
 
 private:
     Ui::SignalGenerator *ui;
