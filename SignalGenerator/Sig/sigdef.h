@@ -14,7 +14,8 @@ namespace SimSig
         Dc,
         WhiteNoise,
         Main50,
-        Main60
+        Main60,
+        RealEEG
     };
 
     class SigDef
@@ -37,9 +38,15 @@ namespace SimSig
         void SetAmp(int amp);
         virtual float GenData(qint64 tm_ms) = 0;
         virtual QString GetDescription();
-        virtual void SetDescription() = 0;
-        virtual QString GetTypeStr() = 0;
-        virtual SigDef *GetCopy() = 0;
+        virtual void SetDescription() {};
+        virtual QString GetTypeStr()
+        {
+            return "";
+        };
+        virtual SigDef* GetCopy()
+        {
+            return nullptr;
+        };
         virtual QJsonObject GenJsonData();
         virtual void ParseJsonData(QJsonObject data_obj);
     };

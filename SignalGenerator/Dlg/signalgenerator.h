@@ -26,7 +26,7 @@ class SignalGenerator : public QMainWindow
     Q_OBJECT
 
 public:
-    SignalGenerator(QWidget *parent = nullptr);
+    SignalGenerator(QWidget* parent = nullptr);
     ~SignalGenerator();
 private:
     QTimer m_timer_gendata;
@@ -42,9 +42,9 @@ private slots:
 
     void on_m_timer_gendata_timeout();
 
-    void on_m_copy_channel_clicked(Channel *pChannel);
+    void on_m_copy_channel_clicked(Channel* pChannel);
 
-    void on_m_del_channel_clicked(ChannelWidget *pChannelWidget);
+    void on_m_del_channel_clicked(ChannelWidget* pChannelWidget);
 
     void on_m_file_open_action_triggered();
 
@@ -56,17 +56,20 @@ private slots:
 
     void on_m_pushbutton_mark_clicked();
 
-    void keyPressEvent(QKeyEvent *e);
+    void keyPressEvent(QKeyEvent* e);
+
+
+    void on_m_file_eeg_open_triggered();
 
 private:
-    Ui::SignalGenerator *ui;
-    ServerSetting *m_serversetting_dialog = nullptr;
-    AmpSetting *m_ampsetting_dialog = nullptr;
-    QList<ChannelWidget *> m_channel_widget_list;
+    Ui::SignalGenerator* ui;
+    ServerSetting* m_serversetting_dialog = nullptr;
+    AmpSetting* m_ampsetting_dialog = nullptr;
+    QList<ChannelWidget*> m_channel_widget_list;
 
 private:
     void UpDateChannelNum();
-    void AddChnnel(ChannelWidget *new_ch_widget);
+    void AddChnnel(ChannelWidget* new_ch_widget);
     QByteArray GenSettingDataByteArray();
     void ClearAllChannelWidget();
 private:

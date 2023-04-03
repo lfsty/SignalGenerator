@@ -1,7 +1,7 @@
 #include "channelwidget.h"
 #include "ui_channelwidget.h"
 
-ChannelWidget::ChannelWidget(QWidget *parent, QString ch_name) :
+ChannelWidget::ChannelWidget(QWidget* parent, QString ch_name) :
     QWidget(parent),
     ui(new Ui::ChannelWidget)
 {
@@ -14,7 +14,7 @@ ChannelWidget::ChannelWidget(QWidget *parent, QString ch_name) :
     setAttribute(Qt::WA_StyledBackground);
 }
 
-ChannelWidget::ChannelWidget(QWidget *parent, Channel *from_cpoy_channel):
+ChannelWidget::ChannelWidget(QWidget* parent, Channel* from_cpoy_channel):
     QWidget(parent),
     ui(new Ui::ChannelWidget)
 {
@@ -58,6 +58,14 @@ void ChannelWidget::ParseJsonObject(QJsonObject data_obj)
     {
         m_channel->ParseJsonObject(data_obj);
         ui->m_label_name->setText(m_channel->GetChName());
+    }
+}
+
+void ChannelWidget::SetRealEEGChannel(quint64 length, float* data)
+{
+    if(m_channel != nullptr)
+    {
+        m_channel->SetRealEEGChannel(length, data);
     }
 }
 

@@ -1,7 +1,7 @@
 #include "signalgenerator.h"
 #include "ui_signalgenerator.h"
 
-SignalGenerator::SignalGenerator(QWidget *parent)
+SignalGenerator::SignalGenerator(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::SignalGenerator)
 {
@@ -139,7 +139,7 @@ void SignalGenerator::on_m_pushbutton_add_ch_clicked()
     //导联默认名
     QString default_ch_name = "ch" + QString::number(ui->m_lineedit_ch_num->text().toInt() + 1);
 
-    ChannelWidget *channel_widget = new ChannelWidget(this, default_ch_name);
+    ChannelWidget* channel_widget = new ChannelWidget(this, default_ch_name);
 
     AddChnnel(channel_widget);
 }
@@ -154,7 +154,7 @@ void SignalGenerator::on_m_timer_gendata_timeout()
         tmp.resize(sizeof(float));
         for(int i = 0; i < ui->m_verlayout_ch->count(); i++)
         {
-            ChannelWidget *chan_widget = qobject_cast<ChannelWidget *>(ui->m_verlayout_ch->itemAt(i)->widget());
+            ChannelWidget* chan_widget = qobject_cast<ChannelWidget*>(ui->m_verlayout_ch->itemAt(i)->widget());
             if(chan_widget != 0)
             {
                 float ch_data = chan_widget->GenData(time_ms);
@@ -172,13 +172,13 @@ void SignalGenerator::on_m_timer_gendata_timeout()
     }
 }
 
-void SignalGenerator::on_m_copy_channel_clicked(Channel *pChannel)
+void SignalGenerator::on_m_copy_channel_clicked(Channel* pChannel)
 {
-    ChannelWidget *new_channelwidget = new ChannelWidget(this, pChannel);
+    ChannelWidget* new_channelwidget = new ChannelWidget(this, pChannel);
     AddChnnel(new_channelwidget);
 }
 
-void SignalGenerator::on_m_del_channel_clicked(ChannelWidget *pChannelWidget)
+void SignalGenerator::on_m_del_channel_clicked(ChannelWidget* pChannelWidget)
 {
     m_channel_widget_list.removeOne(pChannelWidget);
     UpDateChannelNum();
@@ -200,7 +200,7 @@ void SignalGenerator::UpDateChannelNum()
 
 }
 
-void SignalGenerator::AddChnnel(ChannelWidget *new_ch_widget)
+void SignalGenerator::AddChnnel(ChannelWidget* new_ch_widget)
 {
     ui->m_verlayout_ch->insertWidget(ui->m_verlayout_ch->indexOf(ui->m_pushbutton_add_ch), new_ch_widget);
     //复制导联
@@ -223,7 +223,7 @@ QByteArray SignalGenerator::GenSettingDataByteArray()
     QJsonArray ch_json_array;
     for(int i = 0; i < ui->m_verlayout_ch->count(); i++)
     {
-        ChannelWidget *chan_widget = qobject_cast<ChannelWidget *>(ui->m_verlayout_ch->itemAt(i)->widget());
+        ChannelWidget* chan_widget = qobject_cast<ChannelWidget*>(ui->m_verlayout_ch->itemAt(i)->widget());
         if(chan_widget != 0)
         {
             ch_json_array.push_back(QJsonValue(chan_widget->GenJsonObject()));
@@ -241,7 +241,7 @@ void SignalGenerator::ClearAllChannelWidget()
 {
     for(int i = 0; i < ui->m_verlayout_ch->count(); i++)
     {
-        ChannelWidget *chan_widget = qobject_cast<ChannelWidget *>(ui->m_verlayout_ch->itemAt(i)->widget());
+        ChannelWidget* chan_widget = qobject_cast<ChannelWidget*>(ui->m_verlayout_ch->itemAt(i)->widget());
         if(chan_widget != 0)
         {
             chan_widget->on_m_pushButton_delete_clicked();
@@ -274,7 +274,7 @@ void SignalGenerator::on_m_file_open_action_triggered()
                 for(auto iter : ch_data_array)
                 {
                     QJsonObject single_ch_obj = iter.toObject();
-                    ChannelWidget *channel_widget = new ChannelWidget(this);
+                    ChannelWidget* channel_widget = new ChannelWidget(this);
                     channel_widget->ParseJsonObject(single_ch_obj);
                     AddChnnel(channel_widget);
                 }
@@ -353,9 +353,84 @@ void SignalGenerator::on_m_pushbutton_mark_clicked()
     qDebug() << "mark";
 }
 
-void SignalGenerator::keyPressEvent(QKeyEvent *e)
+void SignalGenerator::keyPressEvent(QKeyEvent* e)
 {
     qDebug() << e->key();
     qDebug() << e->text();
+}
+
+
+
+enum Endian
+{
+    LittileEndian,
+    BigEndian
+};
+
+int byteAraryToInt(QByteArray arr,  Endian endian = BigEndian)
+{
+    if (arr.size() < 4)
+        return 0;
+
+    int res = 0;
+
+    // 小端模式
+    if (endian == LittileEndian)
+    {
+        res = arr.at(0) & 0x000000FF;
+        res |= (arr.at(1) << 8) & 0x0000FF00;
+        res |= (arr.at(2) << 16) & 0x00FF0000;
+        res |= (arr.at(3) << 24) & 0xFF000000;
+    }
+
+    // 大端模式
+    else if (endian == BigEndian)
+    {
+        res = (arr.at(0) << 24) & 0xFF000000;
+        res |= (arr.at(1) << 16) & 0x00FF0000;
+        res |= arr.at(2) << 8 & 0x0000FF00;
+        res |= arr.at(3) & 0x000000FF;
+    }
+    return res;
+}
+
+
+
+
+void SignalGenerator::on_m_file_eeg_open_triggered()
+{
+    QString fileName;
+    fileName = QFileDialog::getOpenFileName(this, "打开文件", "", "真实脑电文件(*.bin)");
+
+    if (!fileName.isNull())
+    {
+        QFile loadFile(fileName);
+        if (loadFile.open(QIODevice::ReadOnly))
+        {
+            ui->m_file_open_action->setEnabled(false);
+            ui->m_file_save_action->setEnabled(false);
+            ui->m_file_save_as_action->setEnabled(false);
+            ui->m_pushbutton_add_ch->setVisible(false);
+
+            QByteArray total_file_data = loadFile.readAll();
+            quint32 ch_num = byteAraryToInt(total_file_data.mid(0, 4), Endian::LittileEndian);
+            total_file_data.remove(0, 4);
+            quint32 srate = byteAraryToInt(total_file_data.mid(0, 4), Endian::LittileEndian);
+            total_file_data.remove(0, 4);
+            quint32 length = byteAraryToInt(total_file_data.mid(0, 4), Endian::LittileEndian);
+            total_file_data.remove(0, 4);
+
+//            auto start_time = clock();
+            for(int i = 0; i < ch_num; i++)
+            {
+                ChannelWidget* channel_widget = new ChannelWidget(this, "Ch" + QString::number(i + 1));
+                channel_widget->SetRealEEGChannel(length, reinterpret_cast<float*>(total_file_data.data()) + i * length );
+                AddChnnel(channel_widget);
+            }
+//            auto finish_time = clock();
+//            qDebug() <<  "time:" << (double)(finish_time - start_time) / CLOCKS_PER_SEC;
+
+        }
+    }
 }
 
