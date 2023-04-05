@@ -14,14 +14,15 @@ class ChannelWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ChannelWidget(QWidget *parent = nullptr, QString ch_name = "");
-    ChannelWidget(QWidget *parent, Channel *from_cpoy_channel);
+    explicit ChannelWidget(QWidget* parent = nullptr, QString ch_name = "");
+    ChannelWidget(QWidget* parent, Channel* from_cpoy_channel);
     ~ChannelWidget();
     float GenData(quint64 tm_ms);
     QJsonObject GenJsonObject();
     void ParseJsonObject(QJsonObject data_obj);
+    void SetRealEEGChannel(quint64 length, float* data);
 private:
-    Channel *m_channel = nullptr;
+    Channel* m_channel = nullptr;
 
 private slots:
     void on_m_pushButton_copy_clicked();
@@ -31,11 +32,11 @@ public slots:
     void on_m_pushButton_delete_clicked();
 
 private:
-    Ui::ChannelWidget *ui;
+    Ui::ChannelWidget* ui;
 
 signals:
-    void ChannelDelete(ChannelWidget *);
-    void CopyChannel(Channel *);
+    void ChannelDelete(ChannelWidget*);
+    void CopyChannel(Channel*);
 
 };
 

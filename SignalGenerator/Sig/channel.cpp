@@ -1,6 +1,6 @@
 #include "channel.h"
 
-Channel::Channel(QObject *parent)
+Channel::Channel(QObject* parent)
     : QObject{parent}
 {
 
@@ -44,10 +44,12 @@ QJsonObject Channel::GenJsonObject()
 void Channel::ParseJsonObject(QJsonObject data_obj)
 {
     SetChName(data_obj["ChName"].toString());
-    if(data_obj["SigData"].isArray()){
+    if(data_obj["SigData"].isArray())
+    {
         QJsonArray sig_array = data_obj["SigData"].toArray();
-        for(auto iter : sig_array){
-            SimSig::SigDef *m_sig = GenSigFromJsonObj(iter.toObject());
+        for(auto iter : sig_array)
+        {
+            SimSig::SigDef* m_sig = GenSigFromJsonObj(iter.toObject());
             m_list_sig.push_back(m_sig);
         }
     }
@@ -63,9 +65,15 @@ float Channel::GenData(quint64 tm_ms)
     return data;
 }
 
-Channel *Channel::GetCopy(QObject *parent)
+void Channel::SetRealEEGChannel(quint64 length, float* data)
 {
-    Channel *new_channel = new Channel(parent);
+    SimSig::SigDef* m_sig = new SimSig::SigRealEEG(length, data);
+    m_list_sig.push_back(m_sig);
+}
+
+Channel* Channel::GetCopy(QObject* parent)
+{
+    Channel* new_channel = new Channel(parent);
     new_channel->SetChName(this->GetChName());
     for(auto sig : m_list_sig)
     {
@@ -76,9 +84,9 @@ Channel *Channel::GetCopy(QObject *parent)
     return new_channel;
 }
 
-SimSig::SigDef *Channel::GenSigFromJsonObj(QJsonObject data_obj)
+SimSig::SigDef* Channel::GenSigFromJsonObj(QJsonObject data_obj)
 {
-    SimSig::SigDef *m_sig = nullptr;
+    SimSig::SigDef* m_sig = nullptr;
     switch(static_cast<SimSig::SigType>(data_obj["Type"].toInt()))
     {
         case SimSig::SigType::Sin :

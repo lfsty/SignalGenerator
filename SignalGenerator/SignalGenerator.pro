@@ -20,6 +20,7 @@ SOURCES += \
     Sig/sigdc.cpp \
     Sig/sigdef.cpp \
     Sig/sigmain.cpp \
+    Sig/sigrealeeg.cpp \
     Sig/sigsin.cpp \
     main.cpp
 
@@ -36,6 +37,7 @@ HEADERS += \
     Sig/sigdc.h \
     Sig/sigdef.h \
     Sig/sigmain.h \
+    Sig/sigrealeeg.h \
     Sig/sigsin.h
 
 FORMS += \

@@ -177,6 +177,8 @@
     <addaction name="m_file_open_action"/>
     <addaction name="m_file_save_action"/>
     <addaction name="m_file_save_as_action"/>
+    <addaction name="separator"/>
+    <addaction name="m_file_eeg_open"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -211,6 +213,11 @@
   <action name="m_file_save_as_action">
    <property name="text">
     <string>另存为</string>
+   </property>
+  </action>
+  <action name="m_file_eeg_open">
+   <property name="text">
+    <string>真实脑电文件</string>
    </property>
   </action>
  </widget>

@@ -8,6 +8,7 @@
 #include "sigdc.h"
 #include "sigmain.h"
 #include "sigsin.h"
+#include "sigrealeeg.h"
 
 
 
