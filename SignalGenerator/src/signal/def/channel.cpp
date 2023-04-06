@@ -27,12 +27,12 @@ ChannelData& Channel::GetChData()
     return m_ch_data;
 }
 
-qreal Channel::GenData(qreal x)
+qreal Channel::GenData(const quint64& t_ms)
 {
     qreal data = 0;
     for(auto sig : m_list_sig)
     {
-        data += sig->GenData(x);
+        data += sig->GenData(t_ms);
     }
     return data;
 }

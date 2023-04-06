@@ -12,6 +12,7 @@
 #include <QLegendMarker>
 
 #include "../def/channel.h"
+#include "sigsetting.h"
 
 #define CHART_POINT 1000
 namespace Ui
@@ -30,12 +31,20 @@ public:
 private slots:
 
 
+    void on_m_pushButton_add_sig_clicked();
+
 private:
     Ui::ChannelSetting* ui;
+    Channel* m_current_channel = nullptr;
+    SigSetting m_dlg_sigsetting;
+private:
+    //绘图
     QChart* m_chart = nullptr;
     QLineSeries* m_line_series = nullptr;
     QValueAxis* m_axisY = nullptr;
     QValueAxis* m_axisX = nullptr;
+private:
+    void UpdateChartData();
 signals:
     void sig_channel_data_changed();
 

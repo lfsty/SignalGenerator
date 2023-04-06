@@ -23,7 +23,7 @@ public:
         m_amp = amp;
     }
 public:
-    virtual qreal GenData(qreal x) = 0;
+    virtual qreal GenData(const quint64& t_ms) = 0;
     virtual QString GetDescription() = 0;
 signals:
 

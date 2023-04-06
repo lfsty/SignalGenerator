@@ -72,7 +72,7 @@ void MainWindow::UpdateChannel()
 {
     int _current_ch_num =  ui->m_verlayout_ch->count() - 2;
 
-    //更新index
+    //更新导联名称
     for(int i = 0; i < _current_ch_num; i++)
     {
         emit sig_UpdateChannelName(i);

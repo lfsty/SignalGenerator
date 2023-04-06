@@ -4,14 +4,12 @@
 
 #include "sigdef.h"
 
-
-
 class SigConst : public SigDef
 {
 public:
     explicit SigConst(QObject* parent = nullptr);
 public:
-    virtual qreal GenData(qreal x);
+    virtual qreal GenData(const quint64& t_ms);
     virtual QString GetDescription();
 private:
     qreal m_const_data = 0;

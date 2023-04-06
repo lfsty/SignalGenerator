@@ -3,7 +3,8 @@
 
 ChannelSetting::ChannelSetting(QWidget* parent) :
     QDialog(parent),
-    ui(new Ui::ChannelSetting)
+    ui(new Ui::ChannelSetting),
+    m_dlg_sigsetting(this)
 {
     ui->setupUi(this);
 
@@ -38,6 +39,10 @@ ChannelSetting::ChannelSetting(QWidget* parent) :
             m_line_series->attachAxis(m_axisX);
         }
     }
+    {
+        // sigsetting初始化
+        m_dlg_sigsetting.setModal(true);
+    }
 }
 
 ChannelSetting::~ChannelSetting()
@@ -66,46 +71,9 @@ ChannelSetting::~ChannelSetting()
 void ChannelSetting::OnSettingChannel(Channel* channel)
 {
     assert(channel != nullptr);
+    m_current_channel = channel;
     this->show();
-    {
-        //初始化导联绘图
-        if(m_line_series != nullptr)
-        {
-            m_line_series->clear();
-            qreal _max, _min;
-            for(qint64 tm_ms = 0; tm_ms < CHART_POINT; tm_ms++)
-            {
-                qreal _x = qreal(tm_ms) / 1000;
-                qreal _data = channel->GenData(_x);
-
-                if(tm_ms == 0)
-                {
-                    _max = _min = _data;
-                }
-                else
-                {
-                    if(_data > _max)
-                    {
-                        _max = _data;
-                    }
-                    if(_data < _min)
-                    {
-                        _min = _data;
-                    }
-                }
-
-                m_line_series->append(_x, _data);
-            }
-
-            float axix_delta = 1;
-            if(_max != _min)
-            {
-                axix_delta = (_max - _min) * 0.1;
-            }
-            m_axisY->setMax(_max + axix_delta);
-            m_axisY->setMin(_min - axix_delta);
-        }
-    }
+    UpdateChartData();
 
     ui->m_lineedit_ch_name->setText(channel->GetChData().m_ch_name);
 
@@ -118,5 +86,51 @@ void ChannelSetting::OnSettingChannel(Channel* channel)
 
 //    qDebug() << channel_widget->GetChannelData().m_ch_name;
 
+}
+
+void ChannelSetting::UpdateChartData()
+{
+    //初始化导联绘图
+    if(m_line_series != nullptr)
+    {
+        m_line_series->clear();
+        qreal _max, _min;
+        for(qint64 tm_ms = 0; tm_ms < CHART_POINT; tm_ms++)
+        {
+            qreal _x = qreal(tm_ms) / 1000;
+            qreal _data = m_current_channel->GenData(_x);
+
+            if(tm_ms == 0)
+            {
+                _max = _min = _data;
+            }
+            else
+            {
+                if(_data > _max)
+                {
+                    _max = _data;
+                }
+                if(_data < _min)
+                {
+                    _min = _data;
+                }
+            }
+
+            m_line_series->append(_x, _data);
+        }
+
+        float axix_delta = 1;
+        if(_max != _min)
+        {
+            axix_delta = (_max - _min) * 0.1;
+        }
+        m_axisY->setMax(_max + axix_delta);
+        m_axisY->setMin(_min - axix_delta);
+    }
+}
+
+void ChannelSetting::on_m_pushButton_add_sig_clicked()
+{
+    m_dlg_sigsetting.OnSettingSig();
 }
 

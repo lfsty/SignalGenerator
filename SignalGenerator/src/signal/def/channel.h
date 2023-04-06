@@ -21,7 +21,7 @@ public:
     Channel(const Channel& _channel);
 public:
     ChannelData& GetChData();
-    qreal GenData(qreal x);
+    qreal GenData(const quint64& t_ms);
 private:
     QList<SigDef*> m_list_sig;
     ChannelData m_ch_data;

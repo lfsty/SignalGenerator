@@ -16,6 +16,7 @@ SOURCES += \
     src/signal/def/sigdef.cpp \
     src/signal/dlg/channelsetting.cpp \
     src/signal/dlg/channelwidget.cpp \
+    src/signal/dlg/sigsetting.cpp \
     src/signal/totalchannelwork.cpp
 
 HEADERS += \
@@ -25,12 +26,14 @@ HEADERS += \
     src/signal/def/sigdef.h \
     src/signal/dlg/channelsetting.h \
     src/signal/dlg/channelwidget.h \
+    src/signal/dlg/sigsetting.h \
     src/signal/totalchannelwork.h
 
 FORMS += \
     src/mainwindow.ui \
     src/signal/dlg/channelsetting.ui \
-    src/signal/dlg/channelwidget.ui
+    src/signal/dlg/channelwidget.ui \
+    src/signal/dlg/sigsetting.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

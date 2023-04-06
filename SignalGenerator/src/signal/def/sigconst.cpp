@@ -7,14 +7,14 @@ SigConst::SigConst(QObject* parent)
 
 }
 
-qreal SigConst::GenData(qreal x)
+qreal SigConst::GenData(const quint64& t_ms)
 {
     return m_const_data * m_amp;
 }
 
 QString SigConst::GetDescription()
 {
-    return "test_desc";
+    return "直流分量：" + QString::number(m_const_data * m_amp);
 }
 
 void SigConst::SetDC(const qreal& const_data)

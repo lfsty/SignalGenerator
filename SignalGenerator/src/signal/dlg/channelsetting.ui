@@ -28,7 +28,37 @@
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0" colspan="2">
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="m_lineedit_ch_name"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>导联名称</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="2">
+      <widget class="QPushButton" name="m_pushButton_add_sig">
+       <property name="text">
+        <string>添加信号</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="4">
       <widget class="QChartView" name="m_chartview" native="true">
        <property name="minimumSize">
         <size>
@@ -44,32 +74,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1" rowspan="2">
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>导联名称</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="m_lineedit_ch_name"/>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QPushButton" name="m_pushbutton_addsig">
-         <property name="text">
-          <string>添加信号</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="1" column="0">
+     <item row="2" column="0" colspan="4">
       <widget class="QTableWidget" name="m_tableWidget_sig">
        <column>
         <property name="text">
