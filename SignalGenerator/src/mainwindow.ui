@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SignalGenerator</class>
- <widget class="QMainWindow" name="SignalGenerator">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -76,7 +76,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>当前每秒发送帧数</string>
+         <string>帧数</string>
         </property>
        </widget>
       </item>
@@ -123,8 +123,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>253</width>
-           <height>228</height>
+           <width>270</width>
+           <height>256</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -133,7 +133,7 @@
             <item>
              <widget class="QPushButton" name="m_pushbutton_add_ch">
               <property name="icon">
-               <iconset resource="../resource.qrc">
+               <iconset resource="resource.qrc">
                 <normaloff>:/image/add.png</normaloff>:/image/add.png</iconset>
               </property>
              </widget>
@@ -167,7 +167,7 @@
      <x>0</x>
      <y>0</y>
      <width>300</width>
-     <height>26</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -222,7 +222,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../resource.qrc"/>
+  <include location="resource.qrc"/>
  </resources>
  <connections/>
 </ui>

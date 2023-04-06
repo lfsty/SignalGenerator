@@ -1,55 +1,34 @@
-QT       += core gui
-QT       += network serialport charts
+QT       += core gui charts
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11
+CONFIG += c++17
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Dlg/ampsetting.cpp \
-    Dlg/channelsetting.cpp \
-    Dlg/channelwidget.cpp \
-    Dlg/serversetting.cpp \
-    Dlg/signalgenerator.cpp \
-    Dlg/sigsetting.cpp \
-    Sig/channel.cpp \
-    Sig/sigcos.cpp \
-    Sig/sigdc.cpp \
-    Sig/sigdef.cpp \
-    Sig/sigmain.cpp \
-    Sig/sigrealeeg.cpp \
-    Sig/sigsin.cpp \
-    main.cpp
+    src/main.cpp \
+    src/mainwindow.cpp \
+    src/signal/def/channel.cpp \
+    src/signal/def/sigdef.cpp \
+    src/signal/dlg/channelsetting.cpp \
+    src/signal/dlg/channelwidget.cpp \
+    src/signal/totalchannelwork.cpp
 
 HEADERS += \
-    Dlg/ampsetting.h \
-    Dlg/channelsetting.h \
-    Dlg/channelwidget.h \
-    Dlg/serversetting.h \
-    Dlg/signalgenerator.h \
-    Dlg/sigsetting.h \
-    Sig/channel.h \
-    Sig/sigall.h \
-    Sig/sigcos.h \
-    Sig/sigdc.h \
-    Sig/sigdef.h \
-    Sig/sigmain.h \
-    Sig/sigrealeeg.h \
-    Sig/sigsin.h
+    src/mainwindow.h \
+    src/signal/def/channel.h \
+    src/signal/def/sigdef.h \
+    src/signal/dlg/channelsetting.h \
+    src/signal/dlg/channelwidget.h \
+    src/signal/totalchannelwork.h
 
 FORMS += \
-    Dlg/ampsetting.ui \
-    Dlg/channelsetting.ui \
-    Dlg/channelwidget.ui \
-    Dlg/serversetting.ui \
-    Dlg/signalgenerator.ui \
-    Dlg/sigsetting.ui \
-
-INCLUDEPATH += Dlg
-INCLUDEPATH += Sig
+    src/mainwindow.ui \
+    src/signal/dlg/channelsetting.ui \
+    src/signal/dlg/channelwidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -57,6 +36,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    resource.qrc
-
-DISTFILES +=
+    src/resource.qrc
