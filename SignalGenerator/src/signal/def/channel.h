@@ -10,7 +10,6 @@
 struct ChannelData
 {
     QString m_ch_name = "Default Name";
-    int m_ch_index = -1;
 };
 
 class Channel : public QObject
@@ -19,12 +18,13 @@ class Channel : public QObject
 public:
     explicit Channel(QObject* parent = nullptr);
     ~Channel();
-
+    Channel(const Channel& _channel);
+public:
+    ChannelData& GetChData();
+    qreal GenData(qreal x);
 private:
     QList<SigDef*> m_list_sig;
-
-public:
-    float GenData(quint64 tm_ms);
+    ChannelData m_ch_data;
 signals:
 
 };

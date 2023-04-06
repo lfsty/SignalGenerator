@@ -27,8 +27,8 @@ public:
 private:
     // 向UI界面添加新导联
     void AddChannelWidget(ChannelWidget* channel_widget);
-    // 更新当前导联数
-    void UpdateChannelNum();
+    // 更新当前导联信息
+    void UpdateChannel();
 private slots:
     void on_m_pushbutton_add_ch_clicked();
 
@@ -41,9 +41,9 @@ private:
     QThread m_thread_channel;
     TotalChannelWork m_channel_work;
 signals:
-    void sig_ChannelNumChanged();
     void sig_AddNewChannel(int);
     void sig_DelChannel(int);
+    void sig_UpdateChannelName(int);
 };
 
 #endif // MAINWINDOW_H

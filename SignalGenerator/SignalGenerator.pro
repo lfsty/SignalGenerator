@@ -12,6 +12,7 @@ SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
     src/signal/def/channel.cpp \
+    src/signal/def/sigconst.cpp \
     src/signal/def/sigdef.cpp \
     src/signal/dlg/channelsetting.cpp \
     src/signal/dlg/channelwidget.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
 HEADERS += \
     src/mainwindow.h \
     src/signal/def/channel.h \
+    src/signal/def/sigconst.h \
     src/signal/def/sigdef.h \
     src/signal/dlg/channelsetting.h \
     src/signal/dlg/channelwidget.h \

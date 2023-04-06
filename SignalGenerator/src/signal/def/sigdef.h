@@ -11,10 +11,19 @@ class SigDef : public QObject
     Q_OBJECT
 public:
     explicit SigDef(QObject* parent = nullptr);
-private:
-    float m_amp = 1;
+protected:
+    qreal m_amp = 1;
 public:
-    virtual float GenData(qint64 tm_ms) = 0;
+    qreal GetAmp()
+    {
+        return m_amp;
+    }
+    void SetAmp(qreal amp)
+    {
+        m_amp = amp;
+    }
+public:
+    virtual qreal GenData(qreal x) = 0;
     virtual QString GetDescription() = 0;
 signals:
 

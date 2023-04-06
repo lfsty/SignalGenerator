@@ -11,7 +11,7 @@
 #include <QValueAxis>
 #include <QLegendMarker>
 
-#include "channelwidget.h"
+#include "../def/channel.h"
 
 #define CHART_POINT 1000
 namespace Ui
@@ -26,11 +26,18 @@ class ChannelSetting : public QDialog
 public:
     explicit ChannelSetting(QWidget* parent = nullptr);
     ~ChannelSetting();
-    void OnSettingChannel(ChannelWidget* channel_widget);
+    void OnSettingChannel(Channel* channel);
 private slots:
+
 
 private:
     Ui::ChannelSetting* ui;
+    QChart* m_chart = nullptr;
+    QLineSeries* m_line_series = nullptr;
+    QValueAxis* m_axisY = nullptr;
+    QValueAxis* m_axisX = nullptr;
+signals:
+    void sig_channel_data_changed();
 
 };
 
