@@ -22,7 +22,7 @@ void ChannelWidget::SetChName(QString ch_name)
 
 void ChannelWidget::on_m_pushButton_delete_clicked()
 {
-    this->deleteLater();
+    emit sig_del_this(this);
 }
 
 

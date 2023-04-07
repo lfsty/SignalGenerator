@@ -18,12 +18,13 @@ public:
 
 public slots:
     void UpDateChannelName(int index);
-    void GenFrameData();
+    void GenFrameData(const quint64& t_ms);
 private:
     QList<Channel*> m_list_channel;
 
 signals:
     void sig_UpDateChannelName(int index, QString ch_name);
+    void sig_GenFrameData(const quint64& t_ms, const QList<float>& framedata);
 };
 
 #endif // TOTALCHANNELWORK_H

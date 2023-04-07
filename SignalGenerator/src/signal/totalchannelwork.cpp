@@ -2,6 +2,8 @@
 #include "totalchannelwork.h"
 #include <QDataStream>
 #include <QIODevice>
+#include "def/sigconst.h"
+#include <QDebug>
 TotalChannelWork::TotalChannelWork(QObject* parent)
     : QObject{parent}
 {
@@ -43,20 +45,18 @@ void TotalChannelWork::UpDateChannelName(int index)
     emit sig_UpDateChannelName(index, m_list_channel.at(index)->GetChData().m_ch_name);
 }
 
-void TotalChannelWork::GenFrameData()
+void TotalChannelWork::GenFrameData(const quint64& t_ms)
 {
-    int freq = 500;
-    static qreal t_ms = 0;
-    t_ms += 1.0 / freq;
-
-    QByteArray _framedata;
-    QDataStream _framedata_stream(&_framedata, QIODevice::WriteOnly);
+    QList<float> _frame_data;
     for(auto ch : m_list_channel)
     {
-        _framedata_stream << ch->GenData(t_ms);
+        _frame_data << ch->GenData(t_ms);
     }
 
+    emit sig_GenFrameData(t_ms, _frame_data);
 }
+
+
 
 Channel* TotalChannelWork::GetChannelAt(int index)
 {

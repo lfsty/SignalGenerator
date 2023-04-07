@@ -31,6 +31,7 @@ private:
 signals:
     void sig_copy(ChannelWidget*);
     void sig_open_settingDlg(ChannelWidget*);
+    void sig_del_this(ChannelWidget*);
 
 };
 

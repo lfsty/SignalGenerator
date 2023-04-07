@@ -44,6 +44,7 @@ signals:
     void sig_AddNewChannel(int);
     void sig_DelChannel(int);
     void sig_UpdateChannelName(int);
+    void sig_ManGenFrameData(quint64 t_ms);
 };
 
 #endif // MAINWINDOW_H

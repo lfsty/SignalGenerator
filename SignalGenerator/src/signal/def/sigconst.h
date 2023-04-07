@@ -4,6 +4,8 @@
 
 #include "sigdef.h"
 
+
+
 class SigConst : public SigDef
 {
 public:
@@ -11,6 +13,8 @@ public:
 public:
     virtual qreal GenData(const quint64& t_ms);
     virtual QString GetDescription();
+    virtual const SigType GetSigType();
+    virtual SigDef* GetCopy();
 private:
     qreal m_const_data = 0;
 public:

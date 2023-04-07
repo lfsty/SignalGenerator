@@ -7,16 +7,10 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>400</height>
+    <height>500</height>
    </rect>
   </property>
   <property name="minimumSize">
-   <size>
-    <width>500</width>
-    <height>400</height>
-   </size>
-  </property>
-  <property name="maximumSize">
    <size>
     <width>500</width>
     <height>400</height>
@@ -78,12 +72,12 @@
       <widget class="QTableWidget" name="m_tableWidget_sig">
        <column>
         <property name="text">
-         <string>类型</string>
+         <string>信号描述</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>信息</string>
+         <string/>
         </property>
        </column>
       </widget>

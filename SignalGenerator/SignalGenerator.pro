@@ -9,21 +9,24 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/communicate/communicate.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
     src/signal/def/channel.cpp \
     src/signal/def/sigconst.cpp \
-    src/signal/def/sigdef.cpp \
+    src/signal/def/sigsin.cpp \
     src/signal/dlg/channelsetting.cpp \
     src/signal/dlg/channelwidget.cpp \
     src/signal/dlg/sigsetting.cpp \
     src/signal/totalchannelwork.cpp
 
 HEADERS += \
+    src/communicate/communicate.h \
     src/mainwindow.h \
     src/signal/def/channel.h \
     src/signal/def/sigconst.h \
     src/signal/def/sigdef.h \
+    src/signal/def/sigsin.h \
     src/signal/dlg/channelsetting.h \
     src/signal/dlg/channelwidget.h \
     src/signal/dlg/sigsetting.h \

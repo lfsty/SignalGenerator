@@ -11,10 +11,13 @@
 #include <QValueAxis>
 #include <QLegendMarker>
 
+#include <QTableWidgetItem>
+
 #include "../def/channel.h"
 #include "sigsetting.h"
 
-#define CHART_POINT 1000
+//#define CHART_POINT 1000
+
 namespace Ui
 {
     class ChannelSetting;
@@ -29,9 +32,11 @@ public:
     ~ChannelSetting();
     void OnSettingChannel(Channel* channel);
 private slots:
-
-
     void on_m_pushButton_add_sig_clicked();
+
+    void on_m_tableWidget_sig_itemDoubleClicked(QTableWidgetItem* item);
+
+    void on_m_tableWidget_sig_itemClicked(QTableWidgetItem* item);
 
 private:
     Ui::ChannelSetting* ui;
@@ -44,7 +49,8 @@ private:
     QValueAxis* m_axisY = nullptr;
     QValueAxis* m_axisX = nullptr;
 private:
-    void UpdateChartData();
+    void UpdateChartData(const QList<QPointF>& example_data);
+    void UpdateSigsDesp();
 signals:
     void sig_channel_data_changed();
 

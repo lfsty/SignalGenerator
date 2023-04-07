@@ -8,11 +8,7 @@ MainWindow::MainWindow(QWidget* parent)
 {
     ui->setupUi(this);
     {
-        // 导联设置界面
-        m_dlg_channel_setting.setModal(true);
-    }
-    {
-        // 导联
+        // 导联工作线程
         m_channel_work.moveToThread(&m_thread_channel);
         connect(this, &MainWindow::sig_AddNewChannel, &m_channel_work, &TotalChannelWork::AddNewChannel);
         connect(this, &MainWindow::sig_DelChannel, &m_channel_work, &TotalChannelWork::DelChannel);
@@ -25,9 +21,36 @@ MainWindow::MainWindow(QWidget* parent)
         m_thread_channel.start();
     }
     {
-        // 导联设置
-
+        // 导联设置界面
+        m_dlg_channel_setting.setModal(true);
         connect(&m_dlg_channel_setting, &ChannelSetting::sig_channel_data_changed, this, &MainWindow::UpdateChannel);
+    }
+
+
+    {
+        //test
+        connect(ui->m_pushbutton_send_frame, &QPushButton::clicked, this, [ = ]()
+        {
+            static quint64 _t_ms = 0;
+            emit sig_ManGenFrameData(_t_ms);
+            _t_ms += 10;
+        });
+        connect(this, &MainWindow::sig_ManGenFrameData, &m_channel_work, &TotalChannelWork::GenFrameData);
+        connect(&m_channel_work, &TotalChannelWork::sig_GenFrameData, this, [ = ](const quint64 & t_ms, const QList<float>& framedata)
+        {
+            qDebug() << t_ms << "s";
+            for(auto _data : framedata)
+            {
+                qDebug() << _data;
+            }
+
+            //    QByteArray _framedata;
+            //    QDataStream _framedata_stream(&_framedata, QIODevice::WriteOnly);
+            //    for(auto ch : m_list_channel)
+            //    {
+            //        _framedata_stream << ch->GenData(t_ms);
+            //    }
+        });
     }
 }
 
@@ -44,12 +67,12 @@ void MainWindow::AddChannelWidget(ChannelWidget* channel_widget)
     ui->m_verlayout_ch->insertWidget(ui->m_verlayout_ch->indexOf(ui->m_pushbutton_add_ch), channel_widget);
 
     // 删除导联
-    connect(channel_widget, &ChannelWidget::destroyed, this, [ = ](QObject * pwidget)
+    connect(channel_widget, &ChannelWidget::sig_del_this, this, [ = ](ChannelWidget * channel_widget)
     {
-        ChannelWidget* _tmp_chan_widget = static_cast<ChannelWidget*>(pwidget);
-        emit sig_DelChannel(ui->m_verlayout_ch->indexOf(_tmp_chan_widget));
-        ui->m_verlayout_ch->removeWidget(_tmp_chan_widget);
+        emit sig_DelChannel(ui->m_verlayout_ch->indexOf(channel_widget));
+        ui->m_verlayout_ch->removeWidget(channel_widget);
         UpdateChannel();
+        channel_widget->deleteLater();
     });
     // 拷贝导联
     connect(channel_widget, &ChannelWidget::sig_copy, this, [ = ](ChannelWidget * channel_widget)
