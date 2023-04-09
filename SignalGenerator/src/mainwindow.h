@@ -58,6 +58,8 @@ private slots:
 
     void on_m_file_eeg_open_triggered();
 
+    void on_m_pushButton_setting_init_clicked();
+
 private:
     Ui::MainWindow* ui;
 

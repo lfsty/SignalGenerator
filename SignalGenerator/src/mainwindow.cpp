@@ -338,6 +338,7 @@ void MainWindow::on_m_file_eeg_open_triggered()
             memcpy(&_ch_num, _ch_num_byte.data(), sizeof(quint32));
             quint32 _srate;
             memcpy(&_srate, _srate_byte.data(), sizeof(quint32));
+            ui->m_comboBox_freq_select->setCurrentText(QString::number(_srate));
             quint32 _length;
             memcpy(&_length, _length_byte.data(), sizeof(quint32));
 
@@ -361,5 +362,16 @@ void MainWindow::on_m_file_eeg_open_triggered()
             }
         }
     }
+}
+
+
+void MainWindow::on_m_pushButton_setting_init_clicked()
+{
+    ClearAllChannel();
+    ui->m_file_open_action->setEnabled(true);
+    ui->m_file_save_action->setEnabled(true);
+    ui->m_file_save_as_action->setEnabled(true);
+    ui->m_pushbutton_add_ch->setVisible(true);
+    ui->m_comboBox_freq_select->setEnabled(true);
 }
 

@@ -184,6 +184,13 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="m_pushButton_setting_init">
+        <property name="text">
+         <string>清空</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
