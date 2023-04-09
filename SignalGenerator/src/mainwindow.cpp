@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include <QFileDialog>
+#include <QJsonDocument>
+#include <QFile>
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -14,6 +16,12 @@ MainWindow::MainWindow(QWidget* parent)
         connect(this, &MainWindow::sig_AddNewChannel, &m_channel_work, &TotalChannelWork::AddNewChannel);
         connect(this, &MainWindow::sig_DelChannel, &m_channel_work, &TotalChannelWork::DelChannel);
         connect(this, &MainWindow::sig_UpdateChannelName, &m_channel_work, &TotalChannelWork::UpDateChannelName);
+        connect(this, &MainWindow::sig_AddNewChannelFromJson, &m_channel_work, &TotalChannelWork::AddNewChannelFromJson);
+        connect(&m_channel_work, &TotalChannelWork::sig_ChannelAdded, this, [ = ]()
+        {
+            ChannelWidget* _channel_widget = new ChannelWidget(this);
+            AddChannelWidget(_channel_widget);
+        });
         connect(&m_channel_work, &TotalChannelWork::sig_UpDateChannelName, this, [ = ](int index, QString ch_name)
         {
             ChannelWidget* _tmp_chan_widget = static_cast<ChannelWidget*>(ui->m_verlayout_ch->itemAt(index)->widget());
@@ -105,8 +113,6 @@ void MainWindow::AddChannelWidget(ChannelWidget* channel_widget)
     connect(channel_widget, &ChannelWidget::sig_copy, this, [ = ](ChannelWidget * channel_widget)
     {
         emit sig_AddNewChannel(ui->m_verlayout_ch->indexOf(channel_widget));
-        ChannelWidget* _channel_widget = new ChannelWidget(this);
-        AddChannelWidget(_channel_widget);
     });
     //设置导联
     connect(channel_widget, &ChannelWidget::sig_open_settingDlg, this, [ = ](ChannelWidget * channel_widget)
@@ -131,12 +137,42 @@ void MainWindow::UpdateChannel()
     ui->m_lineedit_ch_num->setText(QString::number(_current_ch_num));
 }
 
+bool MainWindow::SaveChSettingDataToFile(QString file_path)
+{
+    QJsonArray _all_channel_data = m_channel_work.GenAllChJsonData();
+    if(_all_channel_data.isEmpty())
+    {
+        return false;
+    }
+    QFile _saveFile(file_path);
+    if(_saveFile.open(QIODevice::WriteOnly))
+    {
+        QJsonDocument _data_json_doc;
+        _data_json_doc.setArray(_all_channel_data);
+        _saveFile.write(_data_json_doc.toJson(QJsonDocument::Indented));
+        _saveFile.close();
+        return true;
+    }
+    return false;
+}
+
+void MainWindow::ClearAllChannel()
+{
+    int _current_ch_num =  ui->m_verlayout_ch->count() - 2;
+
+    //更新导联名称
+    for(int i = _current_ch_num - 1; i >= 0; i--)
+    {
+        emit sig_DelChannel(i);
+        ui->m_verlayout_ch->itemAt(i)->widget()->deleteLater();
+    }
+    ui->m_lineedit_ch_num->setText("0");
+}
+
 
 void MainWindow::on_m_pushbutton_add_ch_clicked()
 {
-    ChannelWidget* _channel_widget = new ChannelWidget(this);
     emit sig_AddNewChannel(-1);
-    AddChannelWidget(_channel_widget);
 }
 
 
@@ -210,5 +246,62 @@ void MainWindow::on_m_comboBox_freq_select_currentTextChanged(const QString& arg
 void MainWindow::closeEvent(QCloseEvent* event)
 {
     emit sig_destroy();
+}
+
+
+void MainWindow::on_m_file_save_as_action_triggered()
+{
+    QString _fileName = QFileDialog::getSaveFileName(this, "打开文件", "", "信号发生器设置文件(*.json)");
+    if(!_fileName.isEmpty())
+    {
+        if(SaveChSettingDataToFile(_fileName))
+        {
+            m_file_setting_path = _fileName;
+        }
+    }
+}
+
+
+void MainWindow::on_m_file_save_action_triggered()
+{
+    if(m_file_setting_path.isEmpty())
+    {
+        //没有读取文件，另存为
+        on_m_file_save_as_action_triggered();
+    }
+    else
+    {
+        SaveChSettingDataToFile(m_file_setting_path);
+    }
+}
+
+
+void MainWindow::on_m_file_open_action_triggered()
+{
+    QString _fileName = QFileDialog::getOpenFileName(this, "打开文件", "", "信号发生器设置文件(*.json)");
+    if(_fileName.isEmpty())
+    {
+        return;
+    }
+
+    QFile _loadFile(_fileName);
+    if (_loadFile.open(QIODevice::ReadOnly))
+    {
+        QByteArray _allData = _loadFile.readAll();
+        _loadFile.close();
+
+        QJsonParseError _jsonError;
+        QJsonDocument _data_doc = QJsonDocument::fromJson(_allData, &_jsonError);
+        if(!_data_doc.isNull() && (_jsonError.error == QJsonParseError::NoError))
+        {
+            ClearAllChannel();
+            m_file_setting_path = _fileName;
+            QJsonArray _ch_data_array = _data_doc.array();
+            for(auto iter : _ch_data_array)
+            {
+                emit sig_AddNewChannelFromJson(iter.toObject());
+            }
+        }
+    }
 }
 

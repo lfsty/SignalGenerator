@@ -35,6 +35,9 @@ private:
     // 更新当前导联信息
     void UpdateChannel();
 
+    bool SaveChSettingDataToFile(QString file_path);
+    void ClearAllChannel();
+
 private slots:
     void on_m_pushbutton_add_ch_clicked();
 
@@ -46,6 +49,12 @@ private slots:
     void on_m_comboBox_freq_select_currentTextChanged(const QString& arg1);
 
     void closeEvent(QCloseEvent* event);
+
+    void on_m_file_save_as_action_triggered();
+
+    void on_m_file_save_action_triggered();
+
+    void on_m_file_open_action_triggered();
 
 private:
     Ui::MainWindow* ui;
@@ -62,8 +71,11 @@ private:
 
     QThread m_thread_channel;
     TotalChannelWork m_channel_work;
+
+    QString m_file_setting_path = "";
 signals:
     void sig_AddNewChannel(int);
+    void sig_AddNewChannelFromJson(const QJsonObject& sig_list_json_data);
     void sig_DelChannel(int);
     void sig_UpdateChannelName(int);
     void sig_ManGenFrameData(quint64 t_ms);

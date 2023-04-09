@@ -15,6 +15,7 @@ public:
     virtual QString GetDescription();
     virtual const SigType GetSigType();
     virtual SigDef* GetCopy();
+    virtual QJsonObject GenJsonData();
 private:
     qreal m_const_data = 0;
 public:

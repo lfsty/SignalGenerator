@@ -71,6 +71,20 @@ void Channel::SetSig(int index, SigDef* sig)
     SigChanged();
 }
 
+QJsonObject Channel::GenChJsonData()
+{
+    QJsonObject _json_obj;
+    QJsonArray _sig_array;
+    for(auto sig : m_list_sig)
+    {
+        _sig_array.append(QJsonValue(sig->GenJsonData()));
+    }
+    _json_obj["ChName"] = m_ch_data.m_ch_name;
+    _json_obj["SigData"] = _sig_array;
+
+    return _json_obj;
+}
+
 const QList<QPointF>& Channel::GetExampleData()
 {
     return m_example_data;

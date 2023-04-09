@@ -30,6 +30,13 @@ SigDef* SigConst::GetCopy()
     return _new_sig;
 }
 
+QJsonObject SigConst::GenJsonData()
+{
+    QJsonObject _json_data = __super::GenJsonData();
+    _json_data["DC"] = GetDC();
+    return _json_data;
+}
+
 void SigConst::SetDC(const qreal& const_data)
 {
     m_const_data = const_data;

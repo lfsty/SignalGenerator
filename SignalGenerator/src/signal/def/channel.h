@@ -5,6 +5,8 @@
 #include <QString>
 #include <QList>
 #include <QPointF>
+#include <QJsonArray>
+#include <QJsonObject>
 
 #include "sigdef.h"
 #define EXAMPLE_DATA_NUM 1000
@@ -26,6 +28,8 @@ public:
     void DelSig(int index);
     //设置信号，本质为删除index的，在index处添加新的
     void SetSig(int index, SigDef* sig);
+    QJsonObject GenChJsonData();
+
     const QList<QPointF>& GetExampleData();
     const QList<SigDef*> GetSigList();
 

@@ -33,3 +33,11 @@ SigDef* SigSin::GetCopy()
     return _new_sig;
 }
 
+QJsonObject SigSin::GenJsonData()
+{
+    QJsonObject _json_data = __super::GenJsonData();
+    _json_data["Freq"] = GetFreq();
+    _json_data["Phase"] = static_cast<qint64>(GetPhase());
+    return _json_data;
+}
+

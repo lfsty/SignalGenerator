@@ -221,11 +221,6 @@
     <string>服务器</string>
    </property>
   </action>
-  <action name="m_setting_generator_action">
-   <property name="text">
-    <string>信号发生器</string>
-   </property>
-  </action>
   <action name="m_file_open_action">
    <property name="text">
     <string>打开</string>

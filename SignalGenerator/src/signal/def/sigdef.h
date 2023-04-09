@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QJsonObject>
 enum SigType
 {
     Const = 0,
@@ -32,6 +33,13 @@ public:
     virtual QString GetDescription() = 0;
     virtual const SigType GetSigType() = 0;
     virtual SigDef* GetCopy() = 0;
+    virtual QJsonObject GenJsonData()
+    {
+        QJsonObject data_obj;
+        data_obj["Type"] = GetSigType();
+        data_obj["Amp"] = GetAmp();
+        return data_obj;
+    };
 signals:
 
 };

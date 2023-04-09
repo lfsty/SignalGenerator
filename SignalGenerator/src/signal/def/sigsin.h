@@ -15,6 +15,7 @@ public:
     virtual QString GetDescription();
     virtual const SigType GetSigType();
     virtual SigDef* GetCopy();
+    virtual QJsonObject GenJsonData();
 private:
     quint64 m_phase = 0;
     qreal m_freq = 0;
