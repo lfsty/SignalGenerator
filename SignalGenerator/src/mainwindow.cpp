@@ -202,6 +202,7 @@ void MainWindow::TCPServerStatusChanged(bool enable)
         ui->m_pushButton_open_siggen->setText("Open");
         ui->m_pushButton_open_siggen->setStyleSheet("background-color: rgb(85, 255, 0);");
         ui->m_comboBox_freq_select->setEnabled(false);
+        ui->m_pushButton_setting_init->setEnabled(false);
 
         for(int i = 0; i < ui->m_verlayout_ch->count(); i++)
         {
@@ -217,6 +218,7 @@ void MainWindow::TCPServerStatusChanged(bool enable)
         ui->m_pushButton_open_siggen->setText("Closed");
         ui->m_pushButton_open_siggen->setStyleSheet("background-color: rgb(255, 0, 0);");
         ui->m_comboBox_freq_select->setEnabled(true);
+        ui->m_pushButton_setting_init->setEnabled(true);
 
         for(int i = 0; i < ui->m_verlayout_ch->count(); i++)
         {
