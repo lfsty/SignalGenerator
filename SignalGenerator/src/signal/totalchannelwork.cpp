@@ -2,7 +2,6 @@
 #include "totalchannelwork.h"
 #include <QDataStream>
 #include <QIODevice>
-#include "def/sigconst.h"
 #include <QDebug>
 TotalChannelWork::TotalChannelWork(QObject* parent)
     : QObject{parent}
@@ -53,7 +52,7 @@ void TotalChannelWork::GenFrameData(const quint64& t_ms)
         _frame_data << ch->GenData(t_ms);
     }
 
-    emit sig_GenFrameData(t_ms, _frame_data);
+    emit sig_GenFrameData(_frame_data);
 }
 
 

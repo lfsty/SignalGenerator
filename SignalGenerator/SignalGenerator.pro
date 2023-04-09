@@ -1,4 +1,4 @@
-QT       += core gui charts
+QT       += core gui charts network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     src/communicate/communicate.cpp \
+    src/communicate/serversetting.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
     src/signal/def/channel.cpp \
@@ -18,10 +19,12 @@ SOURCES += \
     src/signal/dlg/channelsetting.cpp \
     src/signal/dlg/channelwidget.cpp \
     src/signal/dlg/sigsetting.cpp \
-    src/signal/totalchannelwork.cpp
+    src/signal/totalchannelwork.cpp \
+    src/timergen/timergen.cpp
 
 HEADERS += \
     src/communicate/communicate.h \
+    src/communicate/serversetting.h \
     src/mainwindow.h \
     src/signal/def/channel.h \
     src/signal/def/sigconst.h \
@@ -30,9 +33,11 @@ HEADERS += \
     src/signal/dlg/channelsetting.h \
     src/signal/dlg/channelwidget.h \
     src/signal/dlg/sigsetting.h \
-    src/signal/totalchannelwork.h
+    src/signal/totalchannelwork.h \
+    src/timergen/timergen.h
 
 FORMS += \
+    src/communicate/serversetting.ui \
     src/mainwindow.ui \
     src/signal/dlg/channelsetting.ui \
     src/signal/dlg/channelwidget.ui \

@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_dlg_channel_setting(this)
+    , m_dlg_server_setting(this)
 {
     ui->setupUi(this);
     {
@@ -25,32 +26,51 @@ MainWindow::MainWindow(QWidget* parent)
         m_dlg_channel_setting.setModal(true);
         connect(&m_dlg_channel_setting, &ChannelSetting::sig_channel_data_changed, this, &MainWindow::UpdateChannel);
     }
+    {
+        m_dlg_server_setting.setModal(true);
 
+        //服务器设置
+        m_communicate.MoveToThread(&m_thread_communicate);
+        //打开
+        connect(this, &MainWindow::sig_OpenTCPServer, &m_dlg_server_setting, &ServerSetting::OpenTCPServer);
+        connect(&m_dlg_server_setting, &ServerSetting::sig_open_TCPServer, &m_communicate, &Communicate::OpenTCPServer);
+
+        //关闭
+        connect(this, &MainWindow::sig_CloseTCPServer, &m_communicate, &Communicate::CloseTCPServer);
+        connect(this, &MainWindow::sig_destroy, &m_communicate, &Communicate::CloseTCPServer);
+
+        //状态切换
+        connect(&m_communicate, &Communicate::sig_TCPServer_status_changed, this, &MainWindow::TCPServerStatusChanged);
+        connect(&m_communicate, &Communicate::sig_TCPServer_status_changed, &m_dlg_server_setting, &ServerSetting::TCPServerStatusChanged);
+
+        m_thread_communicate.start();
+    }
+    {
+        //时钟信号
+        m_timer_gen.SetTimerInterval(1000 / ui->m_comboBox_freq_select->currentText().toInt());
+        m_timer_gen.MoveToThread(&m_thread_timer);
+        connect(this, &MainWindow::sig_SetTimerInterval, &m_timer_gen, &TimerGen::SetTimerInterval);
+        //帧数统计
+        connect(&m_communicate, &Communicate::sig_TCP_frame_send, &m_timer_gen, &TimerGen::FrameSended);
+        connect(&m_timer_gen, &TimerGen::sig_frame_count_s, ui->m_lcd_send_frame_num, static_cast<void(QLCDNumber::*)(int)>(&QLCDNumber::display));
+
+        connect(this, &MainWindow::sig_destroy, &m_timer_gen, &TimerGen::Destroy);
+
+        //时钟开关
+        connect(&m_communicate, &Communicate::sig_TCPServer_status_changed, &m_timer_gen, &TimerGen::SetTimerEnable);
+
+        //信号传递
+        connect(ui->m_pushbutton_send_frame, &QPushButton::clicked, &m_timer_gen, &TimerGen::ManGenTimer);
+        connect(&m_timer_gen, &TimerGen::sig_genTimer_ms, &m_channel_work, &TotalChannelWork::GenFrameData);
+        connect(&m_channel_work, &TotalChannelWork::sig_GenFrameData, &m_communicate, &Communicate::OnGenData);
+        m_thread_timer.start();
+    }
 
     {
-        //test
-        connect(ui->m_pushbutton_send_frame, &QPushButton::clicked, this, [ = ]()
-        {
-            static quint64 _t_ms = 0;
-            emit sig_ManGenFrameData(_t_ms);
-            _t_ms += 10;
-        });
-        connect(this, &MainWindow::sig_ManGenFrameData, &m_channel_work, &TotalChannelWork::GenFrameData);
-        connect(&m_channel_work, &TotalChannelWork::sig_GenFrameData, this, [ = ](const quint64 & t_ms, const QList<float>& framedata)
-        {
-            qDebug() << t_ms << "s";
-            for(auto _data : framedata)
-            {
-                qDebug() << _data;
-            }
-
-            //    QByteArray _framedata;
-            //    QDataStream _framedata_stream(&_framedata, QIODevice::WriteOnly);
-            //    for(auto ch : m_list_channel)
-            //    {
-            //        _framedata_stream << ch->GenData(t_ms);
-            //    }
-        });
+        ui->m_pushbutton_mark->setVisible(false);
+        ui->m_pushButton_open_siggen->setText("Closed");
+        ui->m_pushButton_open_siggen->setStyleSheet("background-color: rgb(255, 0, 0);");
+        ui->m_pushbutton_send_frame->setVisible(false);
     }
 }
 
@@ -60,6 +80,13 @@ MainWindow::~MainWindow()
 
     m_thread_channel.quit();
     m_thread_channel.wait();
+
+    m_thread_communicate.quit();
+    m_thread_communicate.wait();
+
+    m_thread_timer.quit();
+    m_thread_timer.wait();
+
 }
 
 void MainWindow::AddChannelWidget(ChannelWidget* channel_widget)
@@ -110,5 +137,78 @@ void MainWindow::on_m_pushbutton_add_ch_clicked()
     ChannelWidget* _channel_widget = new ChannelWidget(this);
     emit sig_AddNewChannel(-1);
     AddChannelWidget(_channel_widget);
+}
+
+
+void MainWindow::on_m_setting_server_action_triggered()
+{
+    m_dlg_server_setting.show();
+}
+
+
+void MainWindow::on_m_pushButton_open_siggen_clicked()
+{
+    if(ui->m_pushButton_open_siggen->text() == "Closed")
+    {
+        emit sig_OpenTCPServer();
+    }
+    else if(ui->m_pushButton_open_siggen->text() == "Open")
+    {
+        emit sig_CloseTCPServer();
+    }
+}
+
+void MainWindow::TCPServerStatusChanged(bool enable)
+{
+    if(enable)
+    {
+        ui->m_pushButton_open_siggen->setText("Open");
+        ui->m_pushButton_open_siggen->setStyleSheet("background-color: rgb(85, 255, 0);");
+        ui->m_comboBox_freq_select->setEnabled(false);
+
+        for(int i = 0; i < ui->m_verlayout_ch->count(); i++)
+        {
+            QWidget* _tmp_widget = ui->m_verlayout_ch->itemAt(i)->widget();
+            if(_tmp_widget != nullptr)
+            {
+                _tmp_widget->setEnabled(false);
+            }
+        }
+    }
+    else
+    {
+        ui->m_pushButton_open_siggen->setText("Closed");
+        ui->m_pushButton_open_siggen->setStyleSheet("background-color: rgb(255, 0, 0);");
+        ui->m_comboBox_freq_select->setEnabled(true);
+
+        for(int i = 0; i < ui->m_verlayout_ch->count(); i++)
+        {
+            QWidget* _tmp_widget = ui->m_verlayout_ch->itemAt(i)->widget();
+            if(_tmp_widget != nullptr)
+            {
+                _tmp_widget->setEnabled(true);
+            }
+        }
+    }
+}
+
+
+void MainWindow::on_m_comboBox_freq_select_currentTextChanged(const QString& arg1)
+{
+    if(arg1 == "0")
+    {
+        emit sig_SetTimerInterval(0);
+        ui->m_pushbutton_send_frame->setVisible(true);
+    }
+    else
+    {
+        emit sig_SetTimerInterval(1000 / arg1.toInt());
+        ui->m_pushbutton_send_frame->setVisible(false);
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+    emit sig_destroy();
 }
 

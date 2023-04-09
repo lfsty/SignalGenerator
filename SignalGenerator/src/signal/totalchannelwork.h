@@ -24,7 +24,7 @@ private:
 
 signals:
     void sig_UpDateChannelName(int index, QString ch_name);
-    void sig_GenFrameData(const quint64& t_ms, const QList<float>& framedata);
+    void sig_GenFrameData(const QList<float>& framedata);
 };
 
 #endif // TOTALCHANNELWORK_H
