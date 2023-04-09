@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget* parent)
         connect(this, &MainWindow::sig_DelChannel, &m_channel_work, &TotalChannelWork::DelChannel);
         connect(this, &MainWindow::sig_UpdateChannelName, &m_channel_work, &TotalChannelWork::UpDateChannelName);
         connect(this, &MainWindow::sig_AddNewChannelFromJson, &m_channel_work, &TotalChannelWork::AddNewChannelFromJson);
+        connect(this, &MainWindow::sig_AddNewChannelFromRealEEG, &m_channel_work, &TotalChannelWork::AddNewChannelFromRealEEG);
         connect(&m_channel_work, &TotalChannelWork::sig_ChannelAdded, this, [ = ]()
         {
             ChannelWidget* _channel_widget = new ChannelWidget(this);
@@ -300,6 +301,63 @@ void MainWindow::on_m_file_open_action_triggered()
             for(auto iter : _ch_data_array)
             {
                 emit sig_AddNewChannelFromJson(iter.toObject());
+            }
+        }
+    }
+}
+
+
+void MainWindow::on_m_file_eeg_open_triggered()
+{
+    QString _fileName = QFileDialog::getOpenFileName(this, "打开文件", "", "真实脑电文件(*.bin)");
+
+    if (!_fileName.isNull())
+    {
+        QFile loadFile(_fileName);
+        if (loadFile.open(QIODevice::ReadOnly))
+        {
+            ClearAllChannel();
+
+            ui->m_file_open_action->setEnabled(false);
+            ui->m_file_save_action->setEnabled(false);
+            ui->m_file_save_as_action->setEnabled(false);
+            ui->m_pushbutton_add_ch->setVisible(false);
+            ui->m_comboBox_freq_select->setEnabled(false);
+
+            QByteArray total_file_data = loadFile.readAll();
+            loadFile.close();
+
+            QByteArray _ch_num_byte = total_file_data.mid(0, 4);
+            total_file_data.remove(0, 4);
+            QByteArray _srate_byte = total_file_data.mid(0, 4);
+            total_file_data.remove(0, 4);
+            QByteArray _length_byte = total_file_data.mid(0, 4);
+            total_file_data.remove(0, 4);
+
+            quint32 _ch_num;
+            memcpy(&_ch_num, _ch_num_byte.data(), sizeof(quint32));
+            quint32 _srate;
+            memcpy(&_srate, _srate_byte.data(), sizeof(quint32));
+            quint32 _length;
+            memcpy(&_length, _length_byte.data(), sizeof(quint32));
+
+            QStringList _ch_name_list;
+            for(int i = 0; i < _ch_num; i++)
+            {
+                quint8 _tmp_ch_name_length = total_file_data.mid(0, 1).toHex().toUInt();
+                total_file_data.remove(0, 1);
+                QString _tmp_ch_name = total_file_data.mid(0, _tmp_ch_name_length);
+                total_file_data.remove(0, _tmp_ch_name_length);
+                _ch_name_list.push_back(_tmp_ch_name);
+            }
+
+            for(int i = 0; i < _ch_num; i++)
+            {
+                QList<float> data;
+                data.resize(_length);
+                memcpy(data.data(), total_file_data.data(), sizeof(float) *_length );
+                total_file_data.remove(0, sizeof(float) *_length);
+                emit sig_AddNewChannelFromRealEEG(_ch_name_list.at(i), data);
             }
         }
     }

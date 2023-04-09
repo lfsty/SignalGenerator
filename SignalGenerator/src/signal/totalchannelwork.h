@@ -22,6 +22,7 @@ public slots:
     void DelChannel(const int& index);
     void AddNewChannel(const int& copy_index = -1);
     void AddNewChannelFromJson(const QJsonObject& sig_list_json_data);
+    void AddNewChannelFromRealEEG(const QString ch_name, const QList<float> eeg_data);
 private:
     QList<Channel*> m_list_channel;
 

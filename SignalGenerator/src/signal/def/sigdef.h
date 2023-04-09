@@ -9,7 +9,8 @@
 enum SigType
 {
     Const = 0,
-    Sin
+    Sin,
+    Real
 };
 
 class SigDef : public QObject

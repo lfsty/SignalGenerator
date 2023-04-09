@@ -56,6 +56,8 @@ private slots:
 
     void on_m_file_open_action_triggered();
 
+    void on_m_file_eeg_open_triggered();
+
 private:
     Ui::MainWindow* ui;
 
@@ -76,6 +78,7 @@ private:
 signals:
     void sig_AddNewChannel(int);
     void sig_AddNewChannelFromJson(const QJsonObject& sig_list_json_data);
+    void sig_AddNewChannelFromRealEEG(const QString ch_name, const QList<float> eeg_data);
     void sig_DelChannel(int);
     void sig_UpdateChannelName(int);
     void sig_ManGenFrameData(quint64 t_ms);

@@ -5,6 +5,7 @@
 #include <QDebug>
 #include "def/sigconst.h"
 #include "def/sigsin.h"
+#include "def/sigrealeeg.h"
 TotalChannelWork::TotalChannelWork(QObject* parent)
     : QObject{parent}
 {
@@ -42,7 +43,7 @@ void TotalChannelWork::AddNewChannelFromJson(const QJsonObject& sig_list_json_da
         {
             case SigType::Const:
                 {
-                    SigConst* _tmp_sig_const = new SigConst();
+                    SigConst* _tmp_sig_const = new SigConst(_tmp_channel);
                     _tmp_sig_const->SetAmp(_sig_data["Amp"].toDouble());
                     _tmp_sig_const->SetDC(_sig_data["DC"].toDouble());
                     _tmp_sig = _tmp_sig_const;
@@ -50,7 +51,7 @@ void TotalChannelWork::AddNewChannelFromJson(const QJsonObject& sig_list_json_da
                 }
             case SigType::Sin:
                 {
-                    SigSin* _tmp_sig_sin = new SigSin();
+                    SigSin* _tmp_sig_sin = new SigSin(_tmp_channel);
                     _tmp_sig_sin->SetAmp(_sig_data["Amp"].toDouble());
                     _tmp_sig_sin->SetFreq(_sig_data["Freq"].toDouble());
                     _tmp_sig_sin->SetPhase(_sig_data["Phase"].toInteger());
@@ -61,6 +62,19 @@ void TotalChannelWork::AddNewChannelFromJson(const QJsonObject& sig_list_json_da
         assert(_tmp_sig != nullptr);
         _tmp_channel->AddSig(_tmp_sig);
     }
+    m_list_channel.push_back(_tmp_channel);
+    emit sig_ChannelAdded();
+}
+
+void TotalChannelWork::AddNewChannelFromRealEEG(const QString ch_name, const QList<float> eeg_data)
+{
+    Channel* _tmp_channel = new Channel(this);
+    _tmp_channel->GetChData().m_ch_name = ch_name;
+
+    SigRealEEG* _real_eeg_sig = new SigRealEEG(_tmp_channel);
+    _real_eeg_sig->SetEEGData(eeg_data);
+    _tmp_channel->AddSig(_real_eeg_sig);
+
     m_list_channel.push_back(_tmp_channel);
     emit sig_ChannelAdded();
 }
