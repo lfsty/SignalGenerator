@@ -1,55 +1,49 @@
-QT       += core gui
-QT       += network serialport charts
+QT       += core gui charts network
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11
+CONFIG += c++17
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Dlg/ampsetting.cpp \
-    Dlg/channelsetting.cpp \
-    Dlg/channelwidget.cpp \
-    Dlg/serversetting.cpp \
-    Dlg/signalgenerator.cpp \
-    Dlg/sigsetting.cpp \
-    Sig/channel.cpp \
-    Sig/sigcos.cpp \
-    Sig/sigdc.cpp \
-    Sig/sigdef.cpp \
-    Sig/sigmain.cpp \
-    Sig/sigrealeeg.cpp \
-    Sig/sigsin.cpp \
-    main.cpp
+    src/communicate/communicate.cpp \
+    src/communicate/serversetting.cpp \
+    src/main.cpp \
+    src/mainwindow.cpp \
+    src/signal/def/channel.cpp \
+    src/signal/def/sigconst.cpp \
+    src/signal/def/sigrealeeg.cpp \
+    src/signal/def/sigsin.cpp \
+    src/signal/dlg/channelsetting.cpp \
+    src/signal/dlg/channelwidget.cpp \
+    src/signal/dlg/sigsetting.cpp \
+    src/signal/totalchannelwork.cpp \
+    src/timergen/timergen.cpp
 
 HEADERS += \
-    Dlg/ampsetting.h \
-    Dlg/channelsetting.h \
-    Dlg/channelwidget.h \
-    Dlg/serversetting.h \
-    Dlg/signalgenerator.h \
-    Dlg/sigsetting.h \
-    Sig/channel.h \
-    Sig/sigall.h \
-    Sig/sigcos.h \
-    Sig/sigdc.h \
-    Sig/sigdef.h \
-    Sig/sigmain.h \
-    Sig/sigrealeeg.h \
-    Sig/sigsin.h
+    src/communicate/communicate.h \
+    src/communicate/serversetting.h \
+    src/mainwindow.h \
+    src/signal/def/channel.h \
+    src/signal/def/sigconst.h \
+    src/signal/def/sigdef.h \
+    src/signal/def/sigrealeeg.h \
+    src/signal/def/sigsin.h \
+    src/signal/dlg/channelsetting.h \
+    src/signal/dlg/channelwidget.h \
+    src/signal/dlg/sigsetting.h \
+    src/signal/totalchannelwork.h \
+    src/timergen/timergen.h
 
 FORMS += \
-    Dlg/ampsetting.ui \
-    Dlg/channelsetting.ui \
-    Dlg/channelwidget.ui \
-    Dlg/serversetting.ui \
-    Dlg/signalgenerator.ui \
-    Dlg/sigsetting.ui \
-
-INCLUDEPATH += Dlg
-INCLUDEPATH += Sig
+    src/communicate/serversetting.ui \
+    src/mainwindow.ui \
+    src/signal/dlg/channelsetting.ui \
+    src/signal/dlg/channelwidget.ui \
+    src/signal/dlg/sigsetting.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -57,6 +51,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    resource.qrc
-
-DISTFILES +=
+    src/resource.qrc
