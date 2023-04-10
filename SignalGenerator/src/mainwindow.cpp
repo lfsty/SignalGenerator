@@ -217,7 +217,8 @@ void MainWindow::TCPServerStatusChanged(bool enable)
     {
         ui->m_pushButton_open_siggen->setText("Closed");
         ui->m_pushButton_open_siggen->setStyleSheet("background-color: rgb(255, 0, 0);");
-        ui->m_comboBox_freq_select->setEnabled(true);
+        if(!m_real_eeg)
+            ui->m_comboBox_freq_select->setEnabled(true);
         ui->m_pushButton_setting_init->setEnabled(true);
 
         for(int i = 0; i < ui->m_verlayout_ch->count(); i++)
@@ -340,7 +341,6 @@ void MainWindow::on_m_file_eeg_open_triggered()
             memcpy(&_ch_num, _ch_num_byte.data(), sizeof(quint32));
             quint32 _srate;
             memcpy(&_srate, _srate_byte.data(), sizeof(quint32));
-            ui->m_comboBox_freq_select->setCurrentText(QString::number(_srate));
             quint32 _length;
             memcpy(&_length, _length_byte.data(), sizeof(quint32));
 
@@ -362,6 +362,9 @@ void MainWindow::on_m_file_eeg_open_triggered()
                 total_file_data.remove(0, sizeof(float) *_length);
                 emit sig_AddNewChannelFromRealEEG(_ch_name_list.at(i), data);
             }
+
+            ui->m_comboBox_freq_select->setCurrentText(QString::number(_srate));
+            m_real_eeg = true;
         }
     }
 }
@@ -375,5 +378,6 @@ void MainWindow::on_m_pushButton_setting_init_clicked()
     ui->m_file_save_as_action->setEnabled(true);
     ui->m_pushbutton_add_ch->setVisible(true);
     ui->m_comboBox_freq_select->setEnabled(true);
+    m_real_eeg = false;
 }
 
