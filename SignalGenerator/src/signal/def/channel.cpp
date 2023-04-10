@@ -28,7 +28,6 @@ Channel::~Channel()
 
 Channel::Channel(const Channel& _channel)
 {
-    // 信号复制，没写
     this->setParent(_channel.parent());
 
     m_ch_data = _channel.m_ch_data;
@@ -36,6 +35,7 @@ Channel::Channel(const Channel& _channel)
     for(SigDef* _sig : _channel.m_list_sig)
     {
         SigDef* _new_sig = _sig->GetCopy();
+        assert(_new_sig != nullptr);
         _new_sig->setParent(this);
         AddSig(_new_sig);
     }

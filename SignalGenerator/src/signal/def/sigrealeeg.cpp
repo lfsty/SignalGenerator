@@ -24,7 +24,9 @@ const SigType SigRealEEG::GetSigType()
 
 SigDef* SigRealEEG::GetCopy()
 {
-    return nullptr;
+    SigRealEEG* _new_sig = new SigRealEEG(this->parent());
+    _new_sig->SetEEGData(this->m_data);
+    return _new_sig;
 }
 
 void SigRealEEG::SetEEGData(const QList<float>& eeg_data)

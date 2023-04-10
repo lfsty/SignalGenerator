@@ -62,6 +62,7 @@ private slots:
 
 private:
     Ui::MainWindow* ui;
+    bool m_real_eeg = false;
 
 private:
     ChannelSetting m_dlg_channel_setting;
