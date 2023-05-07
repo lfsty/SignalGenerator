@@ -208,11 +208,17 @@
     <property name="title">
      <string>文件</string>
     </property>
+    <widget class="QMenu" name="menu_3">
+     <property name="title">
+      <string>真实脑电文件</string>
+     </property>
+     <addaction name="actionNeuracle"/>
+    </widget>
     <addaction name="m_file_open_action"/>
     <addaction name="m_file_save_action"/>
     <addaction name="m_file_save_as_action"/>
     <addaction name="separator"/>
-    <addaction name="m_file_eeg_open"/>
+    <addaction name="menu_3"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -243,9 +249,9 @@
     <string>另存为</string>
    </property>
   </action>
-  <action name="m_file_eeg_open">
+  <action name="actionNeuracle">
    <property name="text">
-    <string>真实脑电文件</string>
+    <string>Neuracle</string>
    </property>
   </action>
  </widget>

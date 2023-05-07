@@ -15,9 +15,9 @@ public:
     virtual const SigType GetSigType();
     virtual SigDef* GetCopy();
 public:
-    void SetEEGData(const QList<float>& eeg_data);
+    void SetEEGData(const QList<double>& eeg_data);
 private:
-    QList<float> m_data;
+    QList<double> m_data;
 };
 
 #endif // SIGREALEEG_H
