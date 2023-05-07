@@ -6,6 +6,7 @@
 #include "def/sigconst.h"
 #include "def/sigsin.h"
 #include "def/sigrealeeg.h"
+#include "function/ReadNeuracleData.h"
 TotalChannelWork::TotalChannelWork(QObject* parent)
     : QObject{parent}
 {
@@ -66,17 +67,55 @@ void TotalChannelWork::AddNewChannelFromJson(const QJsonObject& sig_list_json_da
     emit sig_ChannelAdded();
 }
 
-void TotalChannelWork::AddNewChannelFromRealEEG(const QString ch_name, const QList<float> eeg_data)
+void TotalChannelWork::AddNewChannelFromRealEEGNeuracle(const std::string dir_path)
 {
-    Channel* _tmp_channel = new Channel(this);
-    _tmp_channel->GetChData().m_ch_name = ch_name;
+    BDF_INFO _bdf_info;
+    BDFHeader* _bdf_header = new BDFHeader(BDFFileMode::IN, dir_path + "/data.bdf");
+    std::vector<std::string> _origin_channel_labels = _bdf_header->GetLabelsOfChannels();
+    _bdf_info.srate = _bdf_header->GetNumberOfSamplesInEachDataRecord().at(0);
+    delete _bdf_header;
 
-    SigRealEEG* _real_eeg_sig = new SigRealEEG(_tmp_channel);
-    _real_eeg_sig->SetEEGData(eeg_data);
-    _tmp_channel->AddSig(_real_eeg_sig);
+    {
+        // EEG
+        QStringList _channel_labels;
+        for(auto iter = _origin_channel_labels.begin(); iter != _origin_channel_labels.end(); iter++)
+        {
+            _channel_labels.push_back(QString::fromStdString(*iter).simplified());
+        }
 
-    m_list_channel.push_back(_tmp_channel);
-    emit sig_ChannelAdded();
+        const std::vector<std::vector<double>> _eeg_data = ReadNeuracleData::ReadEEGData(dir_path + "/data.bdf");
+        for(int i = 0; i < _channel_labels.size(); i++)
+        {
+            Channel* _tmp_channel = new Channel(this);
+            _tmp_channel->GetChData().m_ch_name = _channel_labels.at(i);
+
+            SigRealEEG* _real_eeg_sig = new SigRealEEG(_tmp_channel);
+
+            _real_eeg_sig->SetEEGData(QList<double>(_eeg_data.at(i).begin(), _eeg_data.at(i).end()));
+            _tmp_channel->AddSig(_real_eeg_sig);
+
+            m_list_channel.push_back(_tmp_channel);
+            emit sig_ChannelAdded();
+        }
+
+        //Marker
+        const std::vector<AnnotationsInfo> _annotations = ReadNeuracleData::ReadAnnotationData(dir_path + "/evt.bdf");
+        QList<double> _annotations_data(_eeg_data.at(0).size(), 0);
+        for(auto anno_data : _annotations)
+        {
+            _annotations_data[anno_data.time_stamp] = anno_data.category;
+        }
+        Channel* _tmp_channel = new Channel(this);
+        _tmp_channel->GetChData().m_ch_name = "Marker";
+        SigRealEEG* _real_eeg_sig = new SigRealEEG(_tmp_channel);
+        _real_eeg_sig->SetEEGData(_annotations_data);
+        _tmp_channel->AddSig(_real_eeg_sig);
+        m_list_channel.push_back(_tmp_channel);
+        emit sig_ChannelAdded();
+    }
+
+
+    emit sig_RealEEGDataLoaded(_bdf_info);
 }
 
 void TotalChannelWork::DelChannel(const int& index)

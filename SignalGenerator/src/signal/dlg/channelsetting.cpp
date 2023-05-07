@@ -163,6 +163,10 @@ void ChannelSetting::on_m_tableWidget_sig_itemDoubleClicked(QTableWidgetItem* it
     }
     int _sig_index = ui->m_tableWidget_sig->indexFromItem(item).row();
     SigDef* _sig_choosed = m_current_channel->GetSigList().at(_sig_index);
+    if(_sig_choosed->GetSigType() == SigType::Real)
+    {
+        return;
+    }
 
     SigDef* _new_sig = m_dlg_sigsetting.OnSettingSig(_sig_choosed);
     _new_sig->moveToThread(m_current_channel->thread());

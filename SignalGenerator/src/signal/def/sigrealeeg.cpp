@@ -29,7 +29,7 @@ SigDef* SigRealEEG::GetCopy()
     return _new_sig;
 }
 
-void SigRealEEG::SetEEGData(const QList<float>& eeg_data)
+void SigRealEEG::SetEEGData(const QList<double>& eeg_data)
 {
     m_data = eeg_data;
 }

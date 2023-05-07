@@ -20,6 +20,8 @@ SOURCES += \
     src/signal/dlg/channelsetting.cpp \
     src/signal/dlg/channelwidget.cpp \
     src/signal/dlg/sigsetting.cpp \
+    src/signal/function/BDFHeader.cpp \
+    src/signal/function/ReadNeuracleData.cpp \
     src/signal/totalchannelwork.cpp \
     src/timergen/timergen.cpp
 
@@ -35,6 +37,8 @@ HEADERS += \
     src/signal/dlg/channelsetting.h \
     src/signal/dlg/channelwidget.h \
     src/signal/dlg/sigsetting.h \
+    src/signal/function/BDFHeader.h \
+    src/signal/function/ReadNeuracleData.h \
     src/signal/totalchannelwork.h \
     src/timergen/timergen.h
 
